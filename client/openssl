@@ -1,0 +1,6 @@
+ 1927  openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 3650 -keyout localhost.key -out localhost.crt
+ 1930  openssl genrsa -out rootCA.key 2048
+ 1932  openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.pem
+ 1934  openssl genrsa -out device.key 2048
+ 1935  openssl req -new -key device.key -out device.csr
+ 1936  openssl x509 -req -in device.csr -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -out device.crt -days 3650 -sha256

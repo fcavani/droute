@@ -1,0 +1,338 @@
+traks.local - drouter (13337) - 25 May 17 11:49 -03 - panic - no tags - - key not found
+
+goroutine 1 [running]:
+github.com/fcavani/log.Recover(0x0)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/log.go:597 +0xab
+panic(0x16b1d20, 0xc420163450)
+	/Users/fcavani/go/go1.8.1/src/runtime/panic.go:489 +0x2cf
+projects2/viperutil.GetMapN(0xc4201a5ec8, 0x2, 0x2, 0x1, 0xc420168f80)
+	/Users/fcavani/go/packages/src/projects2/viperutil/viper.go:20 +0x16f
+projects2/viperutil.GetMapNString(0xc4201a5ec8, 0x2, 0x2, 0xc4201db818, 0xc420161020)
+	/Users/fcavani/go/packages/src/projects2/viperutil/viper.go:27 +0x3f
+main.main()
+	/Users/fcavani/Sources/projects2/web/drouter/main.go:143 +0xe55
+
+goroutine 17 [syscall, locked to thread]:
+runtime.goexit()
+	/Users/fcavani/go/go1.8.1/src/runtime/asm_amd64.s:2197 +0x1
+
+goroutine 35 [syscall]:
+os/signal.signal_recv(0x0)
+	/Users/fcavani/go/go1.8.1/src/runtime/sigqueue.go:116 +0xff
+os/signal.loop()
+	/Users/fcavani/go/go1.8.1/src/os/signal/signal_unix.go:22 +0x22
+created by os/signal.init.1
+	/Users/fcavani/go/go1.8.1/src/os/signal/signal_unix.go:28 +0x41
+
+goroutine 36 [select]:
+github.com/fcavani/buffactory.(*BufferFactory).StartBufferFactory.func1(0xc4200a6280)
+	/Users/fcavani/go/packages/src/github.com/fcavani/buffactory/factory.go:67 +0x26e
+created by github.com/fcavani/buffactory.(*BufferFactory).StartBufferFactory
+	/Users/fcavani/go/packages/src/github.com/fcavani/buffactory/factory.go:85 +0x2d3
+
+goroutine 38 [select, locked to thread]:
+runtime.gopark(0x1804c70, 0x0, 0x17def24, 0x6, 0x18, 0x2)
+	/Users/fcavani/go/go1.8.1/src/runtime/proc.go:271 +0x13a
+runtime.selectgoImpl(0xc42008e750, 0x0, 0x18)
+	/Users/fcavani/go/go1.8.1/src/runtime/select.go:423 +0x1364
+runtime.selectgo(0xc42008e750)
+	/Users/fcavani/go/go1.8.1/src/runtime/select.go:238 +0x1c
+runtime.ensureSigM.func1()
+	/Users/fcavani/go/go1.8.1/src/runtime/signal_unix.go:434 +0x265
+runtime.goexit()
+	/Users/fcavani/go/go1.8.1/src/runtime/asm_amd64.s:2197 +0x1
+
+goroutine 50 [select]:
+github.com/fcavani/log.NewOutBuffer.func1(0xc420168d80)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/outbuffer.go:24 +0x1ae
+created by github.com/fcavani/log.NewOutBuffer
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/outbuffer.go:37 +0x130
+traks.local - drouter (13434) - 25 May 17 11:53 -03 - panic - no tags - - key not found
+
+goroutine 1 [running]:
+github.com/fcavani/log.Recover(0xc420155200)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/log.go:597 +0xab
+panic(0x16b1d20, 0xc42012f740)
+	/Users/fcavani/go/go1.8.1/src/runtime/panic.go:489 +0x2cf
+projects2/viperutil.GetMapN(0xc4201b3ec8, 0x2, 0x2, 0x1, 0xc42013aec0)
+	/Users/fcavani/go/packages/src/projects2/viperutil/viper.go:20 +0x16f
+projects2/viperutil.GetMapNString(0xc4201b3ec8, 0x2, 0x2, 0xc42013d8e8, 0xc4201351a0)
+	/Users/fcavani/go/packages/src/projects2/viperutil/viper.go:27 +0x3f
+main.main()
+	/Users/fcavani/Sources/projects2/web/drouter/main.go:143 +0xe55
+
+goroutine 17 [syscall, locked to thread]:
+runtime.goexit()
+	/Users/fcavani/go/go1.8.1/src/runtime/asm_amd64.s:2197 +0x1
+
+goroutine 5 [syscall]:
+os/signal.signal_recv(0x0)
+	/Users/fcavani/go/go1.8.1/src/runtime/sigqueue.go:116 +0xff
+os/signal.loop()
+	/Users/fcavani/go/go1.8.1/src/os/signal/signal_unix.go:22 +0x22
+created by os/signal.init.1
+	/Users/fcavani/go/go1.8.1/src/os/signal/signal_unix.go:28 +0x41
+
+goroutine 6 [select]:
+github.com/fcavani/buffactory.(*BufferFactory).StartBufferFactory.func1(0xc420018370)
+	/Users/fcavani/go/packages/src/github.com/fcavani/buffactory/factory.go:67 +0x26e
+created by github.com/fcavani/buffactory.(*BufferFactory).StartBufferFactory
+	/Users/fcavani/go/packages/src/github.com/fcavani/buffactory/factory.go:85 +0x2d3
+
+goroutine 34 [select, locked to thread]:
+runtime.gopark(0x1804c70, 0x0, 0x17def24, 0x6, 0x18, 0x2)
+	/Users/fcavani/go/go1.8.1/src/runtime/proc.go:271 +0x13a
+runtime.selectgoImpl(0xc4201e8750, 0x0, 0x18)
+	/Users/fcavani/go/go1.8.1/src/runtime/select.go:423 +0x1364
+runtime.selectgo(0xc4201e8750)
+	/Users/fcavani/go/go1.8.1/src/runtime/select.go:238 +0x1c
+runtime.ensureSigM.func1()
+	/Users/fcavani/go/go1.8.1/src/runtime/signal_unix.go:434 +0x265
+runtime.goexit()
+	/Users/fcavani/go/go1.8.1/src/runtime/asm_amd64.s:2197 +0x1
+
+goroutine 8 [syscall]:
+syscall.Syscall(0x4, 0x4, 0xc420214070, 0x6c, 0xc420212062, 0xc420212000, 0xc42020ac98)
+	/Users/fcavani/go/go1.8.1/src/syscall/asm_darwin_amd64.s:16 +0x5
+syscall.write(0x4, 0xc420214070, 0x6c, 0x70, 0x2, 0x8, 0xc420017bc0)
+	/Users/fcavani/go/go1.8.1/src/syscall/zsyscall_darwin_amd64.go:1361 +0x55
+syscall.Write(0x4, 0xc420214070, 0x6c, 0x70, 0x17e9c29, 0x13, 0x1aff560)
+	/Users/fcavani/go/go1.8.1/src/syscall/syscall_unix.go:181 +0x49
+os.(*File).write(0xc42000e130, 0xc420214070, 0x6c, 0x70, 0xc420214070, 0x6c, 0x70)
+	/Users/fcavani/go/go1.8.1/src/os/file_unix.go:186 +0x95
+os.(*File).Write(0xc42000e130, 0xc420214070, 0x6c, 0x70, 0xc42013d5f0, 0x0, 0x1052690)
+	/Users/fcavani/go/go1.8.1/src/os/file.go:142 +0x7c
+github.com/fcavani/log.(*Writer).Commit(0xc420019270, 0x1aff560, 0xc42013d5f0)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/persistence.go:275 +0x1d9
+github.com/fcavani/log.NewOutBuffer.func1(0xc42013acc0)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/outbuffer.go:34 +0x12e
+created by github.com/fcavani/log.NewOutBuffer
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/outbuffer.go:37 +0x130
+traks.local - drouter (13778) - 25 May 17 11:57 -03 - panic - no tags - - interface conversion: interface {} is nil, not bool
+
+goroutine 1 [running]:
+github.com/fcavani/log.Recover(0x0)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/log.go:597 +0xab
+panic(0x16fff80, 0xc42013cf00)
+	/Users/fcavani/go/go1.8.1/src/runtime/panic.go:489 +0x2cf
+main.main()
+	/Users/fcavani/Sources/projects2/web/drouter/main.go:147 +0x15db
+
+goroutine 17 [syscall, locked to thread]:
+runtime.goexit()
+	/Users/fcavani/go/go1.8.1/src/runtime/asm_amd64.s:2197 +0x1
+
+goroutine 5 [syscall]:
+os/signal.signal_recv(0x0)
+	/Users/fcavani/go/go1.8.1/src/runtime/sigqueue.go:116 +0xff
+os/signal.loop()
+	/Users/fcavani/go/go1.8.1/src/os/signal/signal_unix.go:22 +0x22
+created by os/signal.init.1
+	/Users/fcavani/go/go1.8.1/src/os/signal/signal_unix.go:28 +0x41
+
+goroutine 6 [select]:
+github.com/fcavani/buffactory.(*BufferFactory).StartBufferFactory.func1(0xc420018370)
+	/Users/fcavani/go/packages/src/github.com/fcavani/buffactory/factory.go:67 +0x26e
+created by github.com/fcavani/buffactory.(*BufferFactory).StartBufferFactory
+	/Users/fcavani/go/packages/src/github.com/fcavani/buffactory/factory.go:85 +0x2d3
+
+goroutine 34 [select, locked to thread]:
+runtime.gopark(0x18048a8, 0x0, 0x17deb84, 0x6, 0x18, 0x2)
+	/Users/fcavani/go/go1.8.1/src/runtime/proc.go:271 +0x13a
+runtime.selectgoImpl(0xc420037f50, 0x0, 0x18)
+	/Users/fcavani/go/go1.8.1/src/runtime/select.go:423 +0x1364
+runtime.selectgo(0xc420037f50)
+	/Users/fcavani/go/go1.8.1/src/runtime/select.go:238 +0x1c
+runtime.ensureSigM.func1()
+	/Users/fcavani/go/go1.8.1/src/runtime/signal_unix.go:434 +0x265
+runtime.goexit()
+	/Users/fcavani/go/go1.8.1/src/runtime/asm_amd64.s:2197 +0x1
+
+goroutine 8 [syscall]:
+syscall.Syscall(0x4, 0x4, 0xc420134620, 0x6c, 0xc42014e162, 0xc42014e100, 0xc420038c98)
+	/Users/fcavani/go/go1.8.1/src/syscall/asm_darwin_amd64.s:16 +0x5
+syscall.write(0x4, 0xc420134620, 0x6c, 0x70, 0x2, 0x8, 0xc420017bc0)
+	/Users/fcavani/go/go1.8.1/src/syscall/zsyscall_darwin_amd64.go:1361 +0x55
+syscall.Write(0x4, 0xc420134620, 0x6c, 0x70, 0x17e987c, 0x13, 0x1afe560)
+	/Users/fcavani/go/go1.8.1/src/syscall/syscall_unix.go:181 +0x49
+os.(*File).write(0xc42000e130, 0xc420134620, 0x6c, 0x70, 0xc420134620, 0x6c, 0x70)
+	/Users/fcavani/go/go1.8.1/src/os/file_unix.go:186 +0x95
+os.(*File).Write(0xc42000e130, 0xc420134620, 0x6c, 0x70, 0xc42012f860, 0x0, 0x0)
+	/Users/fcavani/go/go1.8.1/src/os/file.go:142 +0x7c
+github.com/fcavani/log.(*Writer).Commit(0xc4200192c0, 0x1afe560, 0xc42012f860)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/persistence.go:275 +0x1d9
+github.com/fcavani/log.NewOutBuffer.func1(0xc42013ccc0)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/outbuffer.go:34 +0x12e
+created by github.com/fcavani/log.NewOutBuffer
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/outbuffer.go:37 +0x130
+traks.local - drouter (14016) - 25 May 17 12:02 -03 - panic - no tags - - interface conversion: interface {} is nil, not bool
+
+goroutine 1 [running]:
+github.com/fcavani/log.Recover(0x0)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/log.go:597 +0xab
+panic(0x16fff80, 0xc420169280)
+	/Users/fcavani/go/go1.8.1/src/runtime/panic.go:489 +0x2cf
+main.main()
+	/Users/fcavani/Sources/projects2/web/drouter/main.go:147 +0x15db
+
+goroutine 17 [syscall, locked to thread]:
+runtime.goexit()
+	/Users/fcavani/go/go1.8.1/src/runtime/asm_amd64.s:2197 +0x1
+
+goroutine 35 [syscall]:
+os/signal.signal_recv(0x0)
+	/Users/fcavani/go/go1.8.1/src/runtime/sigqueue.go:116 +0xff
+os/signal.loop()
+	/Users/fcavani/go/go1.8.1/src/os/signal/signal_unix.go:22 +0x22
+created by os/signal.init.1
+	/Users/fcavani/go/go1.8.1/src/os/signal/signal_unix.go:28 +0x41
+
+goroutine 36 [select]:
+github.com/fcavani/buffactory.(*BufferFactory).StartBufferFactory.func1(0xc4200a6280)
+	/Users/fcavani/go/packages/src/github.com/fcavani/buffactory/factory.go:67 +0x26e
+created by github.com/fcavani/buffactory.(*BufferFactory).StartBufferFactory
+	/Users/fcavani/go/packages/src/github.com/fcavani/buffactory/factory.go:85 +0x2d3
+
+goroutine 38 [select, locked to thread]:
+runtime.gopark(0x18048a8, 0x0, 0x17deb84, 0x6, 0x18, 0x2)
+	/Users/fcavani/go/go1.8.1/src/runtime/proc.go:271 +0x13a
+runtime.selectgoImpl(0xc42003cf50, 0x0, 0x18)
+	/Users/fcavani/go/go1.8.1/src/runtime/select.go:423 +0x1364
+runtime.selectgo(0xc42003cf50)
+	/Users/fcavani/go/go1.8.1/src/runtime/select.go:238 +0x1c
+runtime.ensureSigM.func1()
+	/Users/fcavani/go/go1.8.1/src/runtime/signal_unix.go:434 +0x265
+runtime.goexit()
+	/Users/fcavani/go/go1.8.1/src/runtime/asm_amd64.s:2197 +0x1
+
+goroutine 39 [syscall]:
+syscall.Syscall(0x4, 0x4, 0xc4201f4070, 0x6c, 0xc4201580e2, 0xc420158080, 0xc42003dc98)
+	/Users/fcavani/go/go1.8.1/src/syscall/asm_darwin_amd64.s:16 +0x5
+syscall.write(0x4, 0xc4201f4070, 0x6c, 0x70, 0x2, 0x8, 0xc42007bb00)
+	/Users/fcavani/go/go1.8.1/src/syscall/zsyscall_darwin_amd64.go:1361 +0x55
+syscall.Write(0x4, 0xc4201f4070, 0x6c, 0x70, 0x17e987d, 0x13, 0x1afe560)
+	/Users/fcavani/go/go1.8.1/src/syscall/syscall_unix.go:181 +0x49
+os.(*File).write(0xc4200841d0, 0xc4201f4070, 0x6c, 0x70, 0xc4201f4070, 0x6c, 0x70)
+	/Users/fcavani/go/go1.8.1/src/os/file_unix.go:186 +0x95
+os.(*File).Write(0xc4200841d0, 0xc4201f4070, 0x6c, 0x70, 0xc42014fe10, 0x0, 0x1052690)
+	/Users/fcavani/go/go1.8.1/src/os/file.go:142 +0x7c
+github.com/fcavani/log.(*Writer).Commit(0xc4200a7310, 0x1afe560, 0xc42014fe10)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/persistence.go:275 +0x1d9
+github.com/fcavani/log.NewOutBuffer.func1(0xc420169040)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/outbuffer.go:34 +0x12e
+created by github.com/fcavani/log.NewOutBuffer
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/outbuffer.go:37 +0x130
+traks.local - drouter (14223) - 25 May 17 12:12 -03 - panic - no tags - - interface conversion: interface {} is nil, not bool
+
+goroutine 1 [running]:
+github.com/fcavani/log.Recover(0x0)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/log.go:597 +0xab
+panic(0x16fff80, 0xc420017500)
+	/Users/fcavani/go/go1.8.1/src/runtime/panic.go:489 +0x2cf
+main.main()
+	/Users/fcavani/Sources/projects2/web/drouter/main.go:147 +0x15db
+
+goroutine 17 [syscall, locked to thread]:
+runtime.goexit()
+	/Users/fcavani/go/go1.8.1/src/runtime/asm_amd64.s:2197 +0x1
+
+goroutine 35 [syscall]:
+os/signal.signal_recv(0x0)
+	/Users/fcavani/go/go1.8.1/src/runtime/sigqueue.go:116 +0xff
+os/signal.loop()
+	/Users/fcavani/go/go1.8.1/src/os/signal/signal_unix.go:22 +0x22
+created by os/signal.init.1
+	/Users/fcavani/go/go1.8.1/src/os/signal/signal_unix.go:28 +0x41
+
+goroutine 36 [select]:
+github.com/fcavani/buffactory.(*BufferFactory).StartBufferFactory.func1(0xc4200a6280)
+	/Users/fcavani/go/packages/src/github.com/fcavani/buffactory/factory.go:67 +0x26e
+created by github.com/fcavani/buffactory.(*BufferFactory).StartBufferFactory
+	/Users/fcavani/go/packages/src/github.com/fcavani/buffactory/factory.go:85 +0x2d3
+
+goroutine 4 [select, locked to thread]:
+runtime.gopark(0x18048a8, 0x0, 0x17deb84, 0x6, 0x18, 0x2)
+	/Users/fcavani/go/go1.8.1/src/runtime/proc.go:271 +0x13a
+runtime.selectgoImpl(0xc420036f50, 0x0, 0x18)
+	/Users/fcavani/go/go1.8.1/src/runtime/select.go:423 +0x1364
+runtime.selectgo(0xc420036f50)
+	/Users/fcavani/go/go1.8.1/src/runtime/select.go:238 +0x1c
+runtime.ensureSigM.func1()
+	/Users/fcavani/go/go1.8.1/src/runtime/signal_unix.go:434 +0x265
+runtime.goexit()
+	/Users/fcavani/go/go1.8.1/src/runtime/asm_amd64.s:2197 +0x1
+
+goroutine 5 [syscall]:
+syscall.Syscall(0x4, 0x4, 0xc4201482a0, 0x6c, 0xc4200c0762, 0xc4200c0700, 0xc420037c98)
+	/Users/fcavani/go/go1.8.1/src/syscall/asm_darwin_amd64.s:16 +0x5
+syscall.write(0x4, 0xc4201482a0, 0x6c, 0x70, 0x2, 0x8, 0xc42007bb00)
+	/Users/fcavani/go/go1.8.1/src/syscall/zsyscall_darwin_amd64.go:1361 +0x55
+syscall.Write(0x4, 0xc4201482a0, 0x6c, 0x70, 0x17e987d, 0x13, 0x1afe560)
+	/Users/fcavani/go/go1.8.1/src/syscall/syscall_unix.go:181 +0x49
+os.(*File).write(0xc42000e0f8, 0xc4201482a0, 0x6c, 0x70, 0xc4201482a0, 0x6c, 0x70)
+	/Users/fcavani/go/go1.8.1/src/os/file_unix.go:186 +0x95
+os.(*File).Write(0xc42000e0f8, 0xc4201482a0, 0x6c, 0x70, 0xc42016bad0, 0x0, 0x1052690)
+	/Users/fcavani/go/go1.8.1/src/os/file.go:142 +0x7c
+github.com/fcavani/log.(*Writer).Commit(0xc420018960, 0x1afe560, 0xc42016bad0)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/persistence.go:275 +0x1d9
+github.com/fcavani/log.NewOutBuffer.func1(0xc4200172c0)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/outbuffer.go:34 +0x12e
+created by github.com/fcavani/log.NewOutBuffer
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/outbuffer.go:37 +0x130
+traks.local - drouter (14389) - 25 May 17 12:14 -03 - panic - no tags - - interface conversion: interface {} is nil, not bool
+
+goroutine 1 [running]:
+github.com/fcavani/log.Recover(0xc4201b3c00)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/log.go:597 +0xab
+panic(0x1700000, 0xc42013cfc0)
+	/Users/fcavani/go/go1.8.1/src/runtime/panic.go:489 +0x2cf
+main.main()
+	/Users/fcavani/Sources/projects2/web/drouter/main.go:150 +0x1660
+
+goroutine 17 [syscall, locked to thread]:
+runtime.goexit()
+	/Users/fcavani/go/go1.8.1/src/runtime/asm_amd64.s:2197 +0x1
+
+goroutine 5 [syscall]:
+os/signal.signal_recv(0x0)
+	/Users/fcavani/go/go1.8.1/src/runtime/sigqueue.go:116 +0xff
+os/signal.loop()
+	/Users/fcavani/go/go1.8.1/src/os/signal/signal_unix.go:22 +0x22
+created by os/signal.init.1
+	/Users/fcavani/go/go1.8.1/src/os/signal/signal_unix.go:28 +0x41
+
+goroutine 6 [select]:
+github.com/fcavani/buffactory.(*BufferFactory).StartBufferFactory.func1(0xc420018370)
+	/Users/fcavani/go/packages/src/github.com/fcavani/buffactory/factory.go:67 +0x26e
+created by github.com/fcavani/buffactory.(*BufferFactory).StartBufferFactory
+	/Users/fcavani/go/packages/src/github.com/fcavani/buffactory/factory.go:85 +0x2d3
+
+goroutine 34 [select, locked to thread]:
+runtime.gopark(0x1804930, 0x0, 0x17dec08, 0x6, 0x18, 0x2)
+	/Users/fcavani/go/go1.8.1/src/runtime/proc.go:271 +0x13a
+runtime.selectgoImpl(0xc4201e8f50, 0x0, 0x18)
+	/Users/fcavani/go/go1.8.1/src/runtime/select.go:423 +0x1364
+runtime.selectgo(0xc4201e8f50)
+	/Users/fcavani/go/go1.8.1/src/runtime/select.go:238 +0x1c
+runtime.ensureSigM.func1()
+	/Users/fcavani/go/go1.8.1/src/runtime/signal_unix.go:434 +0x265
+runtime.goexit()
+	/Users/fcavani/go/go1.8.1/src/runtime/asm_amd64.s:2197 +0x1
+
+goroutine 8 [syscall]:
+syscall.Syscall(0x4, 0x4, 0xc4201d0e70, 0x6c, 0xc4201645e2, 0xc420164580, 0xc4201e9c98)
+	/Users/fcavani/go/go1.8.1/src/syscall/asm_darwin_amd64.s:16 +0x5
+syscall.write(0x4, 0xc4201d0e70, 0x6c, 0x70, 0x2, 0x8, 0xc420017bc0)
+	/Users/fcavani/go/go1.8.1/src/syscall/zsyscall_darwin_amd64.go:1361 +0x55
+syscall.Write(0x4, 0xc4201d0e70, 0x6c, 0x70, 0x17e9901, 0x13, 0x1afe560)
+	/Users/fcavani/go/go1.8.1/src/syscall/syscall_unix.go:181 +0x49
+os.(*File).write(0xc42000e138, 0xc4201d0e70, 0x6c, 0x70, 0xc4201d0e70, 0x6c, 0x70)
+	/Users/fcavani/go/go1.8.1/src/os/file_unix.go:186 +0x95
+os.(*File).Write(0xc42000e138, 0xc4201d0e70, 0x6c, 0x70, 0xc42013b6c0, 0x0, 0x1052690)
+	/Users/fcavani/go/go1.8.1/src/os/file.go:142 +0x7c
+github.com/fcavani/log.(*Writer).Commit(0xc420019180, 0x1afe560, 0xc42013b6c0)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/persistence.go:275 +0x1d9
+github.com/fcavani/log.NewOutBuffer.func1(0xc42013cd80)
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/outbuffer.go:34 +0x12e
+created by github.com/fcavani/log.NewOutBuffer
+	/Users/fcavani/go/packages/src/github.com/fcavani/log/outbuffer.go:37 +0x130

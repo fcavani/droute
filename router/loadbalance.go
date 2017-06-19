@@ -1,0 +1,175 @@
+// Copyright 2017 Felipe A. Cavani. All rights reserved.
+// Use of this source code is governed by the Apache License 2.0
+// license that can be found in the LICENSE file.
+
+package router
+
+import (
+	"context"
+	"net/http"
+	"strings"
+	"sync"
+
+	"github.com/fcavani/e"
+	"github.com/fcavani/log"
+
+	"github.com/fcavani/droute/errhandler"
+	"github.com/fcavani/droute/responsewriter"
+)
+
+const ctxName string = "proxyredirdst"
+
+// LoadBalance interface reuni the methods for a load balancing.
+type LoadBalance interface {
+	AddAddrs(method, path, ip string)
+	Next(method, path string) string
+	Remove(method, path, ip string)
+}
+
+// RedirDestiny inserts in the context the destiny address for the proxy handler.
+func RedirDestiny(dst string, handler http.HandlerFunc) http.HandlerFunc {
+	return func(rw http.ResponseWriter, req *http.Request) {
+		req = req.WithContext(context.WithValue(req.Context(), ctxName, dst))
+		handler(rw, req)
+	}
+}
+
+type ips struct {
+	ips    []string
+	actual int
+}
+
+// RoundRobin make a rounding robin list of ip addresses of destinies.
+type RoundRobin struct {
+	ips map[string]map[string]*ips
+	lck sync.RWMutex
+}
+
+// NewRoundRobin creates a new rounding roubing list.
+func NewRoundRobin() *RoundRobin {
+	return &RoundRobin{
+		ips: make(map[string]map[string]*ips),
+	}
+}
+
+// AddAddrs adds an ip to the list.
+func (rr *RoundRobin) AddAddrs(method, path, ip string) {
+	rr.lck.Lock()
+	defer rr.lck.Unlock()
+	m, ok := rr.ips[method]
+	if !ok {
+		m = make(map[string]*ips)
+		rr.ips[method] = m
+	}
+	p, ok := m[path]
+	if !ok {
+		p = &ips{
+			ips:    make([]string, 0, 10),
+			actual: 0,
+		}
+		m[path] = p
+	}
+	p.ips = append(p.ips, ip)
+}
+
+// Next pops the next address from the list.
+func (rr *RoundRobin) Next(method, path string) string {
+	rr.lck.RLock()
+	defer rr.lck.RUnlock()
+	m, ok := rr.ips[method]
+	if !ok {
+		return ""
+	}
+	p := findPath(m, path)
+	if p == nil {
+		return ""
+	}
+	if len(p.ips) <= 0 {
+		return ""
+	}
+	if p.actual >= len(p.ips) {
+		p.actual = 0
+	}
+	defer func() {
+		p.actual = p.actual + 1
+	}()
+	return p.ips[p.actual]
+}
+
+//Remove exclude a ip from the list of proxies
+func (rr *RoundRobin) Remove(method, path, target string) {
+	rr.lck.Lock()
+	defer rr.lck.Unlock()
+	m, ok := rr.ips[method]
+	if !ok {
+		return
+	}
+	p := findPath(m, path)
+	if p == nil {
+		return
+	}
+	for i, ip := range p.ips {
+		if ip != target {
+			continue
+		}
+		if i > 0 && i+1 < len(p.ips) {
+			p.ips = append(p.ips[:i-1], p.ips[i+1:]...)
+		} else if i == 0 && i+1 < len(p.ips) {
+			p.ips = p.ips[i+1:]
+		} else if i > 0 && i+1 == len(p.ips) {
+			p.ips = p.ips[:i-1]
+		} else if i == 0 && len(p.ips) == 1 {
+			p.ips = p.ips[:0]
+		}
+		break
+	}
+}
+
+// Balance is the handler that inserts in the context the next ip address.
+func Balance(lb LoadBalance, handler responsewriter.HandlerFunc) responsewriter.HandlerFunc {
+	return func(rw *responsewriter.ResponseWriter, req *http.Request) {
+		dst := lb.Next(req.Method, req.URL.Path)
+		if dst == "" {
+			log.Tag("router", "loadbalance").DebugLevel().Println("no proxy ip")
+			errhandler.ErrHandler(rw, http.StatusInternalServerError, e.New("no proxy ip address"))
+			return
+		}
+		req = req.WithContext(context.WithValue(req.Context(), ctxName, dst))
+		handler(rw, req)
+		code := rw.ResponseCode()
+		if code >= 500 && code < 600 {
+			log.Tag("router", "loadbalance").DebugLevel().Printf("remove proxy %v (%v)", dst, code)
+			lb.Remove(req.Method, req.URL.Path, dst)
+		}
+	}
+}
+
+//TODO: random, least used...
+
+func findPath(m map[string]*ips, path string) *ips {
+	p, ok := m[path]
+	if ok {
+		return p
+	}
+	for k, p := range m {
+		if strings.Contains(k, "/*") || matchNamedParam(path, k) {
+			return p
+		}
+	}
+	return nil
+}
+
+func matchNamedParam(path, k string) bool {
+	for i, p := range path {
+		if p != rune(k[i]) {
+			if k[i] == ':' {
+				if i+1 >= len(k) || i+1 >= len(path) {
+					return true
+				}
+				return matchNamedParam(path[i+1:], k[i+1:])
+			}
+			return false
+		}
+	}
+	return false
+}

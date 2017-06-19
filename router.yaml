@@ -1,0 +1,19 @@
+log:
+  file: drouter.log
+  panic: panic.log
+  nostderr: false
+  level: debug
+
+http:
+  bindAddrs: localhost:8081
+  middleware:
+    bucket:
+      size: 10
+      timeout: 60000 #millisecond
+
+https:
+  bindAddrs: localhost:8082
+  certificate: device.crt
+  privatekey: device.key
+  ca: rootCA.pem
+  insecureskipverify: true
