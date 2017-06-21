@@ -20,7 +20,7 @@ import (
 	"github.com/fcavani/log"
 )
 
-// DefaultLang is the default language. Need to be setted in the starp of the
+// DefaultLang is the default language. Need to be setted in the starup of the
 // application.
 var DefaultLang = "en"
 
