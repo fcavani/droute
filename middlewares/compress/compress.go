@@ -12,11 +12,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/fcavani/e"
-
 	"github.com/fcavani/droute/errhandler"
 	"github.com/fcavani/droute/middlewares/request"
 	"github.com/fcavani/droute/responsewriter"
+	"github.com/fcavani/e"
 )
 
 // Compress midleware, compres the data by the request of the user.
