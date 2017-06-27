@@ -24,8 +24,8 @@ import (
 // application.
 var DefaultLang = "en"
 
-// RequestConfig is the configuration for the request parse and pre processing.
-type RequestConfig struct {
+// Config is the configuration for the request parse and pre processing.
+type Config struct {
 	AcceptedUserAgents *useragent.UAVers
 	AcceptedLanguages  []string
 	AcceptedEncoding   []string
@@ -34,10 +34,10 @@ type RequestConfig struct {
 }
 
 // DefaultRequestConfig is a simple default config for request.
-var DefaultRequestConfig *RequestConfig
+var DefaultRequestConfig *Config
 
 func init() {
-	rc := &RequestConfig{
+	rc := &Config{
 		AcceptedUserAgents: useragent.NewUAVers(),
 		AcceptedLanguages:  []string{"pt-br", "en"},
 		AcceptedEncoding:   []string{"gzip", "compress", "deflate", "identity"},
@@ -66,7 +66,7 @@ func init() {
 
 // UserRequest provide methods to access the user request information.
 type UserRequest struct {
-	rc       *RequestConfig
+	rc       *Config
 	r        *http.Request
 	language string
 	ua       *useragent.Product
@@ -80,6 +80,7 @@ type UserRequest struct {
 	timezone *time.Location
 }
 
+// Media return the accepted media by the user.
 func (ur *UserRequest) Media() string {
 	if ur.media != "" {
 		return ur.media
@@ -88,6 +89,7 @@ func (ur *UserRequest) Media() string {
 	return ur.media
 }
 
+// Charset return the accepted charset by the user.
 func (ur *UserRequest) Charset() string {
 	if ur.charset != "" {
 		return ur.charset
@@ -96,13 +98,14 @@ func (ur *UserRequest) Charset() string {
 	return ur.charset
 }
 
+// Language return the language accepted by the user.
 func (ur *UserRequest) Language() string {
 	fromReq := getparam(ur.r, "Accept-Language", ur.rc.AcceptedLanguages, typeparams.ParseLang)
-	fromUrl := ""
+	fromURL := ""
 	if query := ur.Query(); query != nil && query["lang"] != "" {
 		err := typeparams.CheckTypeParams(query["lang"], 2, 6)
 		if err == nil {
-			fromUrl = query["lang"]
+			fromURL = query["lang"]
 		}
 	}
 	// fromD := ""
@@ -111,8 +114,8 @@ func (ur *UserRequest) Language() string {
 	// 		fromD = ilang.(string)
 	// 	}
 	// }
-	// 0o. Manter o estado anterios se fromUrl não mudar
-	// 1o. fromUrl
+	// 0o. Manter o estado anterios se fromURL não mudar
+	// 1o. fromURL
 	// 2o. fromReq
 	// 3o. ur.language
 	// 4o. default
@@ -121,12 +124,12 @@ func (ur *UserRequest) Language() string {
 	// 		ur.D.Set("lang", ur.language)
 	// 	}
 	// }()
-	if fromUrl == "" && ur.language != "" {
+	if fromURL == "" && ur.language != "" {
 		return ur.language
-		// } else if fromUrl == "" && fromD != "" {
+		// } else if fromURL == "" && fromD != "" {
 		// 	ur.language = fromD
-	} else if fromUrl != "" {
-		ur.language = fromUrl
+	} else if fromURL != "" {
+		ur.language = fromURL
 	} else if fromReq != "" {
 		ur.language = fromReq
 	} else if ur.language != "" {
@@ -138,6 +141,7 @@ func (ur *UserRequest) Language() string {
 	return ur.language
 }
 
+// Encoding return the encoding algorithm accepted by the user.
 func (ur *UserRequest) Encoding() string {
 	if ur.encoding != "" {
 		return ur.encoding
@@ -146,10 +150,12 @@ func (ur *UserRequest) Encoding() string {
 	return ur.encoding
 }
 
+// LangDir is the language write direction, always return ltr.
 func (ur *UserRequest) LangDir() string {
 	return "ltr"
 }
 
+// Useragent return the user ua.
 func (ur *UserRequest) Useragent() *useragent.Product {
 	if ur.ua != nil {
 		return ur.ua
@@ -174,7 +180,8 @@ func (ur *UserRequest) Useragent() *useragent.Product {
 	return ur.ua
 }
 
-func (ur *UserRequest) Ip() string {
+// IP returns the users real ip.
+func (ur *UserRequest) IP() string {
 	if ur.ip != "" {
 		return ur.ip
 	}
@@ -186,7 +193,8 @@ func (ur *UserRequest) Ip() string {
 	return ur.ip
 }
 
-func (ur *UserRequest) Url() *url.URL {
+// URL return the user requested url.
+func (ur *UserRequest) URL() *url.URL {
 	if ur.url != nil {
 		return ur.url
 	}
@@ -203,6 +211,7 @@ func (ur *UserRequest) Url() *url.URL {
 	return ur.url
 }
 
+// Referrer return the referrer url.
 func (ur *UserRequest) Referrer() *url.URL {
 	if ur.referrer != nil {
 		return ur.referrer
@@ -215,12 +224,13 @@ func (ur *UserRequest) Referrer() *url.URL {
 	return ur.referrer
 }
 
+// Query returns a map with the queries in the url made by the user.
 func (ur *UserRequest) Query() map[string]string {
 	if ur.query != nil {
 		return ur.query
 	}
 	var err error
-	ur.query, err = h.GetUrlQuery(ur.Url().RawQuery)
+	ur.query, err = h.GetUrlQuery(ur.URL().RawQuery)
 	if err != nil {
 		return nil
 	}
@@ -246,7 +256,8 @@ func timeZoneJS2utc(tzstr string) (*time.Location, error) {
 	}
 	h := minutes / 60
 	if h == 0 {
-		return time.FixedZone("UTC±0", 0), nil
+		//return time.FixedZone("UTC±0", 0), nil
+		return time.UTC, nil
 	}
 	utc += strconv.Itoa(h)
 	m := int((float32(minutes)/60.0 - float32(h)) * 60.0)
@@ -256,26 +267,30 @@ func timeZoneJS2utc(tzstr string) (*time.Location, error) {
 	return time.FixedZone(utc, minutes*-60), nil
 }
 
+//Timezone receives the time zone from que query parameter tz in the javascript
+// format and convert it to time.Location.
 func (ur *UserRequest) Timezone() *time.Location {
+	var err error
 	var tzstr string
+	if ur.timezone != nil {
+		return ur.timezone
+	}
 	if query := ur.Query(); query != nil && query["tz"] != "" {
-		err := typeparams.CheckTypeParams(query["tz"], 2, 6)
+		err = typeparams.CheckTypeParams(query["tz"], 2, 6)
 		if err == nil {
 			tzstr = query["tz"]
 		}
 	}
 	if tzstr == "" {
-		if ur.timezone != nil {
-			return ur.timezone
-		}
-		return time.Local
+		ur.timezone = time.Local
+		return ur.timezone
 	}
-	loc, err := timeZoneJS2utc(tzstr)
+	ur.timezone, err = timeZoneJS2utc(tzstr)
 	if err != nil {
 		log.Tag("request").Errorf("Can't convert time zone: %v", err)
 		return nil
 	}
-	return loc
+	return ur.timezone
 }
 
 // Request get the user request from the context.
@@ -283,12 +298,12 @@ func Request(r *http.Request) *UserRequest {
 	return r.Context().Value("request").(*UserRequest)
 }
 
-// RequestHandler reads the information in the request parameter and process it,
+// Handler reads the information in the request parameter and process it,
 // the result got to the context under the name "request". All data from the
 // request must be accessed with the function Request(r), i.e. Request(r).Referrer().
 // This is done with the intent of make the information in r more acessible and
 // in this way avaid repetitive work.
-func RequestHandler(rc *RequestConfig, formsizefile int64, handler http.HandlerFunc) http.HandlerFunc {
+func Handler(rc *Config, formsizefile int64, handler http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := r.ParseForm()
 		if err != nil {
@@ -315,19 +330,14 @@ func RequestHandler(rc *RequestConfig, formsizefile int64, handler http.HandlerF
 func getparam(r *http.Request, header string, accepted []string, parser func(string) (typeparams.TypeParams, error)) (param string) {
 	params := r.Header.Get(header)
 	if params == "" {
-		param = accepted[0]
 		return
 	}
 	params = strings.ToLower(params)
 	parsed, err := parser(params)
 	if err != nil {
-		param = accepted[0]
 		return
 	}
 	param = parsed.FindBest(accepted)
-	if param == "" {
-		param = accepted[0]
-	}
 	return
 }
 
@@ -346,6 +356,6 @@ func errHandler(w http.ResponseWriter, code int, err error) {
 	}
 	er := json.NewEncoder(w).Encode(resp)
 	if er != nil {
-		log.Tag("router", "server", "proxy").Error(er)
+		log.Tag("router", "server").Error(er)
 	}
 }
