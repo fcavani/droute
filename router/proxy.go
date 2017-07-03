@@ -14,11 +14,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fcavani/e"
-	"github.com/fcavani/log"
-
 	"github.com/fcavani/droute/errhandler"
 	"github.com/fcavani/droute/responsewriter"
+	"github.com/fcavani/e"
+	fhttp "github.com/fcavani/http"
+	"github.com/fcavani/log"
 )
 
 // HTTPClient is the default client to contact the server.
@@ -54,6 +54,12 @@ func ConfigProxyHTTPClient(ca string, insecure bool) error {
 func Proxy(path string, timeout time.Duration) responsewriter.HandlerFunc {
 	return func(w *responsewriter.ResponseWriter, r *http.Request) {
 		dst := r.Context().Value("proxyredirdst").(string)
+		if dst == "" {
+			err := e.New("no destiny")
+			log.Tag("router", "server", "proxy").Error(err)
+			errhandler.ErrHandler(w, http.StatusInternalServerError, err)
+			return
+		}
 
 		parsed, err := url.Parse(dst)
 		if err != nil {
@@ -63,7 +69,7 @@ func Proxy(path string, timeout time.Duration) responsewriter.HandlerFunc {
 			return
 		}
 
-		uurl, err := userURL(r)
+		uurl, err := fhttp.Url(r, "")
 		if err != nil {
 			err = e.Push(err, e.New("can't parse the url in request."))
 			log.Tag("router", "server", "proxy").Error(err)
@@ -77,6 +83,7 @@ func Proxy(path string, timeout time.Duration) responsewriter.HandlerFunc {
 		r.URL.Path = strings.TrimPrefix(uurl.Path, path)
 		r.URL.Scheme = parsed.Scheme
 		r.RequestURI = ""
+		r.Header.Add("X-Dst-Serv", dst)
 
 		signal := make(chan error)
 
@@ -88,7 +95,9 @@ func Proxy(path string, timeout time.Duration) responsewriter.HandlerFunc {
 				signal <- err
 				return
 			}
-			defer resp.Body.Close()
+			if resp.Body != nil {
+				defer resp.Body.Close()
+			}
 
 			headers := w.Header()
 			for k, vals := range resp.Header {
@@ -98,9 +107,15 @@ func Proxy(path string, timeout time.Duration) responsewriter.HandlerFunc {
 			}
 			w.WriteHeader(resp.StatusCode)
 
+			if resp.Body == nil {
+				log.Tag("router", "server", "proxy").Printf("%v => %v, %v bytes, %v (%v)", oldurl, r.URL, 0, r.Method, resp.StatusCode)
+				signal <- nil
+				return
+			}
+
 			n, err := io.Copy(w, resp.Body)
 			if err != nil {
-				log.Tag("router", "server", "proxy").Error("Can't copy the buffer:", err)
+				log.Tag("router", "server", "proxy").Error("Can't copy the buffer: ", err)
 				signal <- err
 				return
 			}

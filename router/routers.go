@@ -20,10 +20,10 @@ import (
 )
 
 // NewStaticRouter is a fileserver for a static dir.
-func NewStaticRouter(prefix, dir string, fs afero.Fs, expTime time.Duration, rc *request.RequestConfig, formsizefile int64, cs *cache.Storage) (router *httprouter.Router) {
+func NewStaticRouter(prefix, dir string, fs afero.Fs, expTime time.Duration, rc *request.Config, formsizefile int64, cs *cache.Storage) (router *httprouter.Router) {
 	router = httprouter.New()
 	router.GET("/*filename",
-		request.RequestHandler(rc, formsizefile,
+		request.Handler(rc, formsizefile,
 			cache.Cache(expTime, cs, cache.MetaFS(fs, prefix),
 				compress.Compress(
 					expire.Expire(expTime,

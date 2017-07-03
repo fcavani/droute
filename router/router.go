@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/fcavani/e"
+	fhttp "github.com/fcavani/http"
 	"github.com/fcavani/httprouter"
 	"github.com/fcavani/log"
 	"github.com/fcavani/text"
@@ -37,7 +38,8 @@ func NewRouters() Routers {
 	return r
 }
 
-// Set add a new router with name to the group
+// Set add a new router with name to the group. If called again with the same
+// name it will replace that router.
 func (r Routers) Set(name string, router *httprouter.Router) {
 	r[name] = router
 }
@@ -168,13 +170,17 @@ func (r *Router) Add(routerName, method, path, dst string) (err error) {
 	}
 	err = text.CheckLettersNumber(method, 3, 20)
 	if err != nil {
-		err = e.Push(err, "invalid route name")
+		err = e.Push(err, "invalid method name")
 		return
 	}
-	err = text.CheckFileName(path, 1, 128)
-	if err != nil {
-		err = e.Push(err, "invalid path name")
-		return
+	if path != "" {
+		err = text.CheckFileName(path, 1, 128)
+		if err != nil {
+			err = e.Push(err, "invalid path name")
+			return
+		}
+	} else {
+		path = "/"
 	}
 	_, err = url.Parse(dst)
 	if err != nil {
@@ -187,7 +193,7 @@ func (r *Router) Add(routerName, method, path, dst string) (err error) {
 		return
 	}
 
-	if _, _, found := router.Lookup(method, path); found {
+	if h, _, _ := router.Lookup(method, path); h != nil {
 		// if the method/path exist return, or only add the new address for the
 		// new server.
 		r.lb.AddAddrs(method, path, dst)
@@ -230,16 +236,20 @@ func (r *Router) Add(routerName, method, path, dst string) (err error) {
 // to the default router.
 func (r *Router) AddRoute(routerName, method, path string, handler http.HandlerFunc) {
 	err := text.CheckLettersNumber(routerName, 2, 128)
-	if err != nil {
+	if err != nil && routerName != DefaultRouter {
 		panic("invalid route name")
 	}
 	err = text.CheckLettersNumber(method, 3, 20)
 	if err != nil {
-		panic("invalid route name")
+		panic("invalid method name")
 	}
-	err = text.CheckFileName(path, 2, 128)
-	if err != nil {
-		panic("invalid route name")
+	if path != "" {
+		err = text.CheckFileName(path, 1, 128)
+		if err != nil {
+			panic("invalid path name")
+		}
+	} else {
+		path = "/"
 	}
 	router := r.routers.Get(routerName)
 	if router == nil {
@@ -431,7 +441,7 @@ func response(w http.ResponseWriter, code int, methode, routerName, path, err st
 
 func localhost(f http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ipstr, err := RemoteIP(r)
+		ipstr, err := fhttp.RemoteIP(r)
 		if err != nil {
 			errhandler.ErrHandler(w, http.StatusForbidden, err)
 			return
@@ -441,6 +451,6 @@ func localhost(f http.HandlerFunc) http.HandlerFunc {
 			f(w, r)
 			return
 		}
-		errhandler.ErrHandler(w, http.StatusForbidden, err)
+		errhandler.ErrHandler(w, http.StatusForbidden, e.New("ip isn't loopback"))
 	}
 }

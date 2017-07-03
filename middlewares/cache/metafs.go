@@ -20,7 +20,7 @@ import (
 func MetaFS(fs afero.Fs, prefix string) Meta {
 	return func(r *http.Request) (Document, *http.Request, error) {
 		req := request.Request(r)
-		up, err := url.PathUnescape(req.Url().Path)
+		up, err := url.PathUnescape(req.URL().Path)
 		if err != nil {
 			return nil, nil, e.Forward(err)
 		}

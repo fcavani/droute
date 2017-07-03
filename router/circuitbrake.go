@@ -15,9 +15,12 @@ import (
 	"github.com/sony/gobreaker"
 )
 
+// Cbs stores the servers subject of the circuit braker
+type Cbs map[string]*gobreaker.CircuitBreaker
+
 // CircuitBrake brakes the connection from the proxy to the server if the server
 // dies.
-func CircuitBrake(cbs map[string]*gobreaker.CircuitBreaker, handler responsewriter.HandlerFunc) responsewriter.HandlerFunc {
+func CircuitBrake(cbs Cbs, handler responsewriter.HandlerFunc) responsewriter.HandlerFunc {
 	return func(rw *responsewriter.ResponseWriter, req *http.Request) {
 		proxy := req.Context().Value("proxyredirdst").(string)
 		cb, found := cbs[proxy]

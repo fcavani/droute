@@ -26,12 +26,31 @@ type LoadBalance interface {
 	Remove(method, path, ip string)
 }
 
-// RedirDestiny inserts in the context the destiny address for the proxy handler.
-func RedirDestiny(dst string, handler http.HandlerFunc) http.HandlerFunc {
-	return func(rw http.ResponseWriter, req *http.Request) {
-		req = req.WithContext(context.WithValue(req.Context(), ctxName, dst))
-		handler(rw, req)
+// RedirDst redirects the resquest to a single address.
+type RedirDst struct {
+	dst string
+}
+
+// NewRedirDst creates a balancer with a single address.
+func NewRedirDst(dst string) LoadBalance {
+	return &RedirDst{
+		dst: dst,
 	}
+}
+
+// AddAddrs do nothing
+func (rd *RedirDst) AddAddrs(method, path, ip string) {
+	return
+}
+
+// Next return always the same address
+func (rd *RedirDst) Next(method, path string) string {
+	return rd.dst
+}
+
+// Remove do nothing
+func (rd *RedirDst) Remove(method, path, ip string) {
+	return
 }
 
 type ips struct {
@@ -54,6 +73,9 @@ func NewRoundRobin() *RoundRobin {
 
 // AddAddrs adds an ip to the list.
 func (rr *RoundRobin) AddAddrs(method, path, ip string) {
+	if path == "" {
+		path = "/"
+	}
 	rr.lck.Lock()
 	defer rr.lck.Unlock()
 	m, ok := rr.ips[method]
@@ -69,11 +91,19 @@ func (rr *RoundRobin) AddAddrs(method, path, ip string) {
 		}
 		m[path] = p
 	}
+	for _, actual := range p.ips {
+		if actual == ip {
+			return
+		}
+	}
 	p.ips = append(p.ips, ip)
 }
 
 // Next pops the next address from the list.
 func (rr *RoundRobin) Next(method, path string) string {
+	if path == "" {
+		path = "/"
+	}
 	rr.lck.RLock()
 	defer rr.lck.RUnlock()
 	m, ok := rr.ips[method]
@@ -98,6 +128,9 @@ func (rr *RoundRobin) Next(method, path string) string {
 
 //Remove exclude a ip from the list of proxies
 func (rr *RoundRobin) Remove(method, path, target string) {
+	if path == "" {
+		path = "/"
+	}
 	rr.lck.Lock()
 	defer rr.lck.Unlock()
 	m, ok := rr.ips[method]
@@ -160,16 +193,16 @@ func findPath(m map[string]*ips, path string) *ips {
 }
 
 func matchNamedParam(path, k string) bool {
+	if path == "" || k == "" {
+		return false
+	}
 	for i, p := range path {
-		if p != rune(k[i]) {
+		if i < len(k) && p != rune(k[i]) {
 			if k[i] == ':' {
-				if i+1 >= len(k) || i+1 >= len(path) {
-					return true
-				}
-				return matchNamedParam(path[i+1:], k[i+1:])
+				return true
 			}
 			return false
 		}
 	}
-	return false
+	return true
 }
