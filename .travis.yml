@@ -1,0 +1,12 @@
+language: go
+go:
+ - 1.8.3
+ - tip
+matrix:
+  allow_failures:
+    - go: tip
+install:
+  - go get -u github.com/kardianos/govendor
+  - govendor sync
+script:
+  - go test -v github.com/fcavani/droute/...
