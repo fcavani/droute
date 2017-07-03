@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/fcavani/afero"
-	"github.com/fcavani/httprouter"
+	"gopkg.in/fcavani/httprouter.v2"
 
 	"github.com/fcavani/droute/errhandler"
 	"github.com/fcavani/droute/middlewares/cache"

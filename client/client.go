@@ -15,7 +15,7 @@ import (
 	"net/url"
 
 	"github.com/fcavani/e"
-	"github.com/fcavani/httprouter"
+	"gopkg.in/fcavani/httprouter.v2"
 	neturl "github.com/fcavani/net/url"
 
 	"github.com/fcavani/droute/router"

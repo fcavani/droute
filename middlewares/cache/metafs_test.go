@@ -30,7 +30,7 @@ func TestMetafs(t *testing.T) {
 
 	rw := responsewriter.NewResponseWriter()
 
-	request.RequestHandler(request.DefaultRequestConfig, 10240, func(rw http.ResponseWriter, r *http.Request) {
+	request.Handler(request.DefaultConfig, 10240, func(rw http.ResponseWriter, r *http.Request) {
 		*req = *r
 	})(rw, req)
 

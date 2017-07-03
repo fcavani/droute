@@ -12,7 +12,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/fcavani/httprouter"
+	"gopkg.in/fcavani/httprouter.v2"
 )
 
 var httpClient *http.Client

@@ -101,14 +101,14 @@ func TestCompress(t *testing.T) {
 		var err error
 		var buf []byte
 		var r *http.Request
-		req := &request.RequestConfig{}
-		*req = *request.DefaultRequestConfig
+		req := &request.Config{}
+		*req = *request.DefaultConfig
 		r, err = http.NewRequest("GET", "http://localhost", nil)
 		if err != nil {
 			t.Fatal(err)
 		}
 		w := responsewriter.NewResponseWriter()
-		h := reqs[i](request.RequestHandler(req, 10240, Compress(f)))
+		h := reqs[i](request.Handler(req, 10240, Compress(f)))
 		h(w, r)
 		switch ce := w.Header().Get("Content-Encoding"); ce {
 		case "identity":

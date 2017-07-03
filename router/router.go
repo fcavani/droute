@@ -16,7 +16,7 @@ import (
 
 	"github.com/fcavani/e"
 	fhttp "github.com/fcavani/http"
-	"github.com/fcavani/httprouter"
+	"gopkg.in/fcavani/httprouter.v2"
 	"github.com/fcavani/log"
 	"github.com/fcavani/text"
 	"github.com/sony/gobreaker"

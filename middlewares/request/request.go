@@ -34,7 +34,7 @@ type Config struct {
 }
 
 // DefaultRequestConfig is a simple default config for request.
-var DefaultRequestConfig *Config
+var DefaultConfig *Config
 
 func init() {
 	rc := &Config{
@@ -61,7 +61,7 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	DefaultRequestConfig = rc
+	DefaultConfig = rc
 }
 
 // UserRequest provide methods to access the user request information.

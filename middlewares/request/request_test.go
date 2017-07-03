@@ -77,7 +77,7 @@ func TestLanguage(t *testing.T) {
 	}
 	r.Header.Add("Accept-Language", "pt-br")
 	ur = &UserRequest{
-		rc: DefaultRequestConfig,
+		rc: DefaultConfig,
 		r:  r,
 	}
 	if m := ur.Language(); m != "en" {
@@ -167,7 +167,7 @@ func TestURL(t *testing.T) {
 		t.Fatal(err)
 	}
 	ur := &UserRequest{
-		rc: DefaultRequestConfig,
+		rc: DefaultConfig,
 		r:  r,
 	}
 	u := ur.URL()
@@ -236,7 +236,7 @@ func TestTimezone(t *testing.T) {
 		t.Fatal(err)
 	}
 	ur := &UserRequest{
-		rc: DefaultRequestConfig,
+		rc: DefaultConfig,
 		r:  r,
 	}
 	if m := ur.Timezone(); m.String() != "UTC-3" {
@@ -251,7 +251,7 @@ func TestTimezone(t *testing.T) {
 		t.Fatal(err)
 	}
 	ur = &UserRequest{
-		rc: DefaultRequestConfig,
+		rc: DefaultConfig,
 		r:  r,
 	}
 	if m := ur.Timezone(); m.String() != "UTC+3" {
@@ -263,7 +263,7 @@ func TestTimezone(t *testing.T) {
 		t.Fatal(err)
 	}
 	ur = &UserRequest{
-		rc: DefaultRequestConfig,
+		rc: DefaultConfig,
 		r:  r,
 	}
 	if m := ur.Timezone(); m != time.Local {
@@ -280,7 +280,7 @@ func TestTimezone(t *testing.T) {
 }
 
 func TestHandler(t *testing.T) {
-	h := Handler(DefaultRequestConfig, 10240, func(w http.ResponseWriter, r *http.Request) {
+	h := Handler(DefaultConfig, 10240, func(w http.ResponseWriter, r *http.Request) {
 		ur := Request(r)
 		if c := ur.Charset(); c != "utf-8" {
 			t.Fatal("invalid charset", c)
@@ -308,7 +308,7 @@ func newUserRequest(key, value string) (*UserRequest, error) {
 		r.Header.Add(key, value)
 	}
 	ur := &UserRequest{
-		rc: DefaultRequestConfig,
+		rc: DefaultConfig,
 		r:  r,
 	}
 	return ur, nil

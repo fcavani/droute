@@ -18,7 +18,7 @@ import (
 	"time"
 
 	"github.com/fcavani/e"
-	"github.com/fcavani/httprouter"
+	"gopkg.in/fcavani/httprouter.v2"
 	"github.com/fcavani/log"
 
 	drouterhttp "github.com/fcavani/droute/http"
