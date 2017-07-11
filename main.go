@@ -5,7 +5,6 @@
 package main
 
 import (
-	"flag"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -14,17 +13,17 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/fcavani/e"
-	"github.com/fcavani/log"
-	"github.com/fcavani/systemd/watchdog"
-	"github.com/spf13/viper"
-
 	uetcd "github.com/fcavani/droute/etcd"
 	drouterhttp "github.com/fcavani/droute/http"
 	"github.com/fcavani/droute/middlewares/bucket"
 	"github.com/fcavani/droute/responsewriter"
 	"github.com/fcavani/droute/router"
+	"github.com/fcavani/e"
+	"github.com/fcavani/log"
+	"github.com/fcavani/systemd/watchdog"
 	"github.com/fcavani/viperutil"
+	flag "github.com/spf13/pflag"
+	"github.com/spf13/viper"
 )
 
 var daemonName = "drouter"
@@ -61,7 +60,10 @@ func main() {
 	name := fset.String("name", daemonName, "Name of the service")
 	pidFile := fset.String("pid", daemonName+".pid", "Pid file for this service.")
 
-	fset.Parse(os.Args)
+	err := fset.Parse(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if *help {
 		fset.PrintDefaults()
