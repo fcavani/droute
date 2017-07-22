@@ -22,6 +22,10 @@ import (
 func Compress(f http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var err error
+		if ce := r.Header.Get("Content-Encoding"); ce == "" || ce == "indentity" {
+			f(w, r)
+			return
+		}
 		resp := responsewriter.NewResponseWriter()
 		f(resp, r)
 		if !doCompress(resp) {
