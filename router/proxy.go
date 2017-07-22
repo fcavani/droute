@@ -91,7 +91,7 @@ func Proxy(path string, timeout time.Duration) responsewriter.HandlerFunc {
 			resp, err := HTTPClient.Do(r)
 			if err != nil {
 				err = e.Push(err, e.New("can't forward the request."))
-				log.Tag("router", "server", "proxy").Error(err)
+				log.Tag("router", "server", "proxy").Error(e.Trace(err))
 				signal <- err
 				return
 			}
