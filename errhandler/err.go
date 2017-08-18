@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/fcavani/e"
 	"github.com/fcavani/log"
 )
 
@@ -19,9 +20,11 @@ func ErrHandler(w http.ResponseWriter, code int, err error) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(code)
 	resp := struct {
-		Err string `json:"err"`
+		Err   string `json:"err"`
+		Human string `json:"human"`
 	}{
-		Err: err.Error(),
+		Err:   err.Error(),
+		Human: e.Human(err),
 	}
 	er := json.NewEncoder(w).Encode(resp)
 	if er != nil {
