@@ -80,6 +80,17 @@ func (u Users) SetPass(user, plainpass, hashtype string) error {
 	return nil
 }
 
+func (u Users) SetRaw(user, pass string) error {
+	if user == "" {
+		return e.New(ErrInvName)
+	}
+	if pass == "" {
+		return e.New(ErrBlankPass)
+	}
+	u[user] = pass
+	return nil
+}
+
 func (u Users) Validate(user, plainpass string) bool {
 	p, ok := u[user]
 	if !ok {

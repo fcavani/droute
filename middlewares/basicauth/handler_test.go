@@ -99,7 +99,8 @@ func TestValidade(t *testing.T) {
 }
 
 type structErr struct {
-	Err string `json:"err"`
+	Err   string `json:"err"`
+	Human string `json:"human"`
 }
 
 func TestBasicAuth(t *testing.T) {
@@ -155,7 +156,6 @@ func TestBasicAuth(t *testing.T) {
 	if code := rw.ResponseCode(); code != 403 {
 		t.Fatal("wrong response code", code)
 	}
-	//t.Log(string(rw.Bytes()))
 	var errorResp structErr
 	err = json.NewDecoder(rw).Decode(&errorResp)
 	if err != nil {
