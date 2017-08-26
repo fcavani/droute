@@ -1,5 +1,8 @@
 # Droute
 
+[![Build Status](https://travis-ci.org/fcavani/droute.svg?branch=master)](https://travis-ci.org/fcavani/droute) [![GoDoc](https://godoc.org/github.com/fcavani/droute?status.svg)](https://godoc.org/github.com/fcavani/droute)
+[![Go Report Card](https://goreportcard.com/badge/github.com/fcavani/droute)](https://goreportcard.com/report/github.com/fcavani/droute)
+
 Droute is a proxy server and a http router for microservices. The proxy part
 receive the requests and redirect it based on the domain and path of the
 request. The client part, where is the logic, register itself with the proxy
