@@ -12,7 +12,6 @@ import (
 	"encoding/base64"
 	"hash"
 	"net/http"
-	"projects/http/auth"
 	"strings"
 
 	"github.com/fcavani/droute/errhandler"
@@ -112,7 +111,7 @@ func (u Users) Validate(user, plainpass string) bool {
 func BasicAuth(realm string, v Validator, handler http.HandlerFunc) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
 		user, pass, err := Basic(r)
-		if e.Equal(err, auth.ErrNoAuthHeader) {
+		if e.Equal(err, ErrNoAuthHeader) {
 			rw.Header().Add("WWW-Authenticate", "Basic realm=\""+realm+"\"")
 			rw.WriteHeader(401)
 			return
