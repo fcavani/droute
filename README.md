@@ -8,9 +8,19 @@ domain and path, you can do the load balancing politics of our choice. The proxy
 retries, load balance and circuit brake. You can add more middlewares if we need
 it.
 
+## Install
+
+Execute the above command:
+
+```
+go get github.com/fcavani/droute
+```
+
+And change the folder to the droute folder.
+
 ## Govendor
 
-Before start sync yours vendor folder.
+Start sync yours vendor folder.
 
 ```
 go get github.com/kardianos/govendor
@@ -27,7 +37,7 @@ go build github.com/fcavani/droute
 
 ## Client
 
-Client is simples, it's like the httprouter. See the client/client_test.go.
+Client is simple, it's like the httprouter. See the client/client_test.go.
 
 ## TODO
 
