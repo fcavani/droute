@@ -6,6 +6,7 @@ package client
 
 import (
 	"bytes"
+	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
@@ -13,13 +14,14 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 	"testing"
 	"time"
 
 	"github.com/fcavani/e"
-	"gopkg.in/fcavani/httprouter.v2"
 	"github.com/fcavani/log"
+	"gopkg.in/fcavani/httprouter.v2"
 
 	drouterhttp "github.com/fcavani/droute/http"
 	"github.com/fcavani/droute/router"
@@ -32,8 +34,15 @@ var h *drouterhttp.HTTPServer
 
 func TestRouter(t *testing.T) {
 	dr = new(router.Router)
+	routers := router.NewRouters()
+	def := routers.Get(router.DefaultRouter)
+	def.Context = func(ctx context.Context) context.Context {
+		ctx, _ = router.WithSignal(ctx, os.Interrupt, os.Kill)
+		ctx, _ = context.WithDeadline(ctx, time.Now().Add(100*time.Millisecond))
+		return ctx
+	}
 	err := dr.Start(
-		router.NewRouters(),
+		routers,
 		router.NewRoundRobin(),
 		5*time.Second, //timeout proxy
 		3,             // retry proxy
