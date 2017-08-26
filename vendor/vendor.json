@@ -45,6 +45,12 @@
 			"revisionTime": "2015-10-26T16:03:18Z"
 		},
 		{
+			"checksumSHA1": "+Zz+leZHHC9C0rx8DoRuffSRPso=",
+			"path": "github.com/coreos/go-systemd/daemon",
+			"revision": "d2196463941895ee908e13531a23a39feb9e1243",
+			"revisionTime": "2017-07-31T11:19:25Z"
+		},
+		{
 			"checksumSHA1": "S5r2q0TjBmNY1Fjafp4ZehY2WF8=",
 			"path": "github.com/fcavani/afero",
 			"revision": "9ef031315d28710a81701ce2bd2981368c99a36b",
@@ -99,10 +105,28 @@
 			"revisionTime": "2017-08-21T19:30:29Z"
 		},
 		{
+			"checksumSHA1": "9dSNgdY2NdXdZbHchdPJ8i/ACTo=",
+			"path": "github.com/fcavani/net/url",
+			"revision": "67ef1b7bc7eba68967be3dbd939ab48c36a329f0",
+			"revisionTime": "2017-08-21T19:30:29Z"
+		},
+		{
 			"checksumSHA1": "clWfT0LUqAO9pNPF5jDGKxCikS0=",
 			"path": "github.com/fcavani/rand",
 			"revision": "188a1d7a237e0f6afc3bad4e239b8f503a91c9ae",
 			"revisionTime": "2015-10-28T19:41:58Z"
+		},
+		{
+			"checksumSHA1": "zqolRtngytV7eBMNT072fX04MVc=",
+			"path": "github.com/fcavani/systemd/util",
+			"revision": "65c0bab3cbf3703f8245ccce55d55331218404be",
+			"revisionTime": "2017-03-03T13:00:47Z"
+		},
+		{
+			"checksumSHA1": "CLg4qZruA/5oqPZqleJTHzFr1do=",
+			"path": "github.com/fcavani/systemd/watchdog",
+			"revision": "65c0bab3cbf3703f8245ccce55d55331218404be",
+			"revisionTime": "2017-03-03T13:00:47Z"
 		},
 		{
 			"checksumSHA1": "yMumOPB/lbU1PDy5A0seMyEWXyY=",
@@ -135,6 +159,12 @@
 			"revisionTime": "2015-10-28T09:37:28Z"
 		},
 		{
+			"checksumSHA1": "eXobS3Zlw8uxjJBCKlb3EXDo1Dg=",
+			"path": "github.com/fcavani/viperutil",
+			"revision": "fea72d1d391cd3dbaf4b906b5913fc771f21a7ae",
+			"revisionTime": "2017-06-19T12:01:24Z"
+		},
+		{
 			"checksumSHA1": "hveFTNQ9YEyYRs6SWuXM+XU9qRI=",
 			"path": "github.com/fsnotify/fsnotify",
 			"revision": "fd9ec7deca8bf46ecd2a795baaacf2b3a9be1197",
@@ -151,6 +181,12 @@
 			"path": "github.com/golang/protobuf/proto",
 			"revision": "8ee79997227bf9b34611aee7946ae64735e6fd93",
 			"revisionTime": "2016-11-17T03:31:26Z"
+		},
+		{
+			"checksumSHA1": "ucTBCc7dDRKLGPsYfAzu/Gq63qA=",
+			"path": "github.com/gorilla/securecookie",
+			"revision": "e59506cc896acb7f7bf732d4fdf5e25f7ccd8983",
+			"revisionTime": "2017-02-24T19:38:04Z"
 		},
 		{
 			"checksumSHA1": "Ok3Csn6Voou7pQT6Dv2mkwpqFtw=",
