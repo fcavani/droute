@@ -143,7 +143,7 @@ func TestCompress(t *testing.T) {
 				t.Log("bogomogo", ce)
 				continue
 			}
-			t.Fatal(i, "invalid content-encoding")
+			t.Fatal(i, "invalid content-encoding", ce)
 		}
 		str := string(buf)
 		if str != "oi" {

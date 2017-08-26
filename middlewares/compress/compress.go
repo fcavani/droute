@@ -24,6 +24,7 @@ func Compress(f http.HandlerFunc) http.HandlerFunc {
 		var err error
 		if ce := r.Header.Get("Content-Encoding"); ce == "" || ce == "indentity" {
 			f(w, r)
+			w.Header().Set("Content-Encoding", "identity")
 			return
 		}
 		resp := responsewriter.NewResponseWriter()
