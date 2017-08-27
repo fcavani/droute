@@ -63,6 +63,12 @@
 			"revisionTime": "2017-06-13T09:22:38Z"
 		},
 		{
+			"checksumSHA1": "+Zz+leZHHC9C0rx8DoRuffSRPso=",
+			"path": "github.com/coreos/go-systemd/daemon",
+			"revision": "d2196463941895ee908e13531a23a39feb9e1243",
+			"revisionTime": "2017-07-31T11:19:25Z"
+		},
+		{
 			"checksumSHA1": "S5r2q0TjBmNY1Fjafp4ZehY2WF8=",
 			"path": "github.com/fcavani/afero",
 			"revision": "9ef031315d28710a81701ce2bd2981368c99a36b",
@@ -117,14 +123,28 @@
 			"revisionTime": "2017-08-21T19:30:29Z"
 		},
 		{
+			"checksumSHA1": "9dSNgdY2NdXdZbHchdPJ8i/ACTo=",
+			"path": "github.com/fcavani/net/url",
+			"revision": "67ef1b7bc7eba68967be3dbd939ab48c36a329f0",
+			"revisionTime": "2017-08-21T19:30:29Z"
+		},
+		{
 			"checksumSHA1": "clWfT0LUqAO9pNPF5jDGKxCikS0=",
 			"path": "github.com/fcavani/rand",
 			"revision": "188a1d7a237e0f6afc3bad4e239b8f503a91c9ae",
 			"revisionTime": "2015-10-28T19:41:58Z"
 		},
 		{
+			"checksumSHA1": "zqolRtngytV7eBMNT072fX04MVc=",
+			"path": "github.com/fcavani/systemd/util",
+			"revision": "65c0bab3cbf3703f8245ccce55d55331218404be",
+			"revisionTime": "2017-03-03T13:00:47Z"
+		},
+		{
+			"checksumSHA1": "CLg4qZruA/5oqPZqleJTHzFr1do=",
 			"path": "github.com/fcavani/systemd/watchdog",
-			"revision": ""
+			"revision": "65c0bab3cbf3703f8245ccce55d55331218404be",
+			"revisionTime": "2017-03-03T13:00:47Z"
 		},
 		{
 			"checksumSHA1": "yMumOPB/lbU1PDy5A0seMyEWXyY=",
