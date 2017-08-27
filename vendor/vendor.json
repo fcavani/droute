@@ -123,6 +123,10 @@
 			"revisionTime": "2015-10-28T19:41:58Z"
 		},
 		{
+			"path": "github.com/fcavani/systemd/watchdog",
+			"revision": ""
+		},
+		{
 			"checksumSHA1": "yMumOPB/lbU1PDy5A0seMyEWXyY=",
 			"path": "github.com/fcavani/tags",
 			"revision": "bef1fb0bbc3f875a3dd87911e120be9de3e93595",
@@ -153,6 +157,12 @@
 			"revisionTime": "2015-10-28T09:37:28Z"
 		},
 		{
+			"checksumSHA1": "eXobS3Zlw8uxjJBCKlb3EXDo1Dg=",
+			"path": "github.com/fcavani/viperutil",
+			"revision": "fea72d1d391cd3dbaf4b906b5913fc771f21a7ae",
+			"revisionTime": "2017-06-19T12:01:24Z"
+		},
+		{
 			"checksumSHA1": "x2Km0Qy3WgJJnV19Zv25VwTJcBM=",
 			"path": "github.com/fsnotify/fsnotify",
 			"revision": "4da3e2cfbabc9f751898f250b49f2439785783a1",
@@ -163,6 +173,12 @@
 			"path": "github.com/go-logfmt/logfmt",
 			"revision": "390ab7935ee28ec6b286364bba9b4dd6410cb3d5",
 			"revisionTime": "2016-11-15T14:25:13Z"
+		},
+		{
+			"checksumSHA1": "ucTBCc7dDRKLGPsYfAzu/Gq63qA=",
+			"path": "github.com/gorilla/securecookie",
+			"revision": "e59506cc896acb7f7bf732d4fdf5e25f7ccd8983",
+			"revisionTime": "2017-02-24T19:38:04Z"
 		},
 		{
 			"checksumSHA1": "7JBkp3EZoc0MSbiyWfzVhO4RYoY=",
