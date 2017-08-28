@@ -154,7 +154,7 @@ func main() {
 	// The context will be caceled if one of the os signal came in, in this way,
 	// the context will will have the opportunit to shutdown the http request.
 	def.Context = func(ctx context.Context) context.Context {
-		ctx, _ := router.WithSignal(ctx, os.Interrupt, os.Kill)
+		ctx, _ = router.WithSignal(ctx, os.Interrupt, os.Kill)
 		return ctx
 	}
 	// Add routes here.
