@@ -153,12 +153,10 @@ func main() {
 	// Inject a signal in the http request.
 	// The context will be caceled if one of the os signal came in, in this way,
 	// the context will will have the opportunit to shutdown the http request.
-	var cancel context.CancelFunc
 	def.Context = func(ctx context.Context) context.Context {
-		ctx, cancel = router.WithSignal(ctx, os.Interrupt, os.Kill)
+		ctx, _ := router.WithSignal(ctx, os.Interrupt, os.Kill)
 		return ctx
 	}
-	defer cancel()
 	// Add routes here.
 	// Redir GET from anything to domain.com
 	routers.Set("redir", router.NewRedirHostRouter("domain.com"))
