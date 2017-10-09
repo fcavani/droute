@@ -126,9 +126,9 @@ func cacheCtrl(w http.ResponseWriter, expire time.Duration, m Document, code int
 	if expire != 0 {
 		maxAge := strconv.FormatFloat(expire.Seconds(), 'f', 0, 64)
 		w.Header().Add("Cache-Control", "max-age="+maxAge+", public")
-		w.Header().Add("Expires", time.Now().Add(expire).UTC().Format(time.RFC1123))
+		w.Header().Add("Expires", time.Now().Add(expire).UTC().Format(http.TimeFormat))
 	}
-	w.Header().Add("Last-Modified", m.Modification().UTC().Format(time.RFC1123))
+	w.Header().Add("Last-Modified", m.Modification().UTC().Format(http.TimeFormat))
 	w.Header().Add("Etag", m.RootDirHash())
 	if code == 0 {
 		return
