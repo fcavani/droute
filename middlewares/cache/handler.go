@@ -64,7 +64,7 @@ func Cache(expire time.Duration, cs *Storage, meta Meta, f http.HandlerFunc) htt
 		}
 		//Cache control
 		w.Header().Add("X-Cache", "true")
-		cacheCtrl(w, expire, m, 200)
+		cacheCtrl(w, expire, m, 0)
 		// Read cache
 		err = cs.ReadTo(m, w)
 		if err != nil {
@@ -73,6 +73,7 @@ func Cache(expire time.Duration, cs *Storage, meta Meta, f http.HandlerFunc) htt
 			return
 		}
 		log.Tag("httpcache").InfoLevel().Printf("Cache hit: %v", m.Path())
+		w.WriteHeader(200)
 	}
 }
 
