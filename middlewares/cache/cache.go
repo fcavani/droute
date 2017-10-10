@@ -193,7 +193,7 @@ func (s *Storage) ReadTo(d Document, w http.ResponseWriter) error {
 
 	for k, v := range h {
 		for _, item := range v {
-			w.Header().Set(k, item)
+			w.Header().Add(k, item)
 		}
 	}
 
