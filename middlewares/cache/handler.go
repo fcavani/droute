@@ -66,14 +66,13 @@ func Cache(expire time.Duration, cs *Storage, meta Meta, f http.HandlerFunc) htt
 		w.Header().Add("X-Cache", "true")
 		cacheCtrl(w, expire, m, 0)
 		// Read cache
-		err = cs.ReadTo(m, w)
+		err = cs.ReadTo(m, w, 200)
 		if err != nil {
 			log.Tag("httpcache").InfoLevel().Printf("Cache miss: %v, %v", m.Path(), e.Trace(err))
 			errHandler(w, http.StatusInternalServerError, e.Forward(exec(expire, cs, m, w, r, f)))
 			return
 		}
 		log.Tag("httpcache").InfoLevel().Printf("Cache hit: %v", m.Path())
-		w.WriteHeader(200)
 	}
 }
 

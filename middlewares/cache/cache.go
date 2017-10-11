@@ -114,9 +114,6 @@ func (s *Storage) Store(d Document, r io.Reader, h map[string][]string) error {
 	path := filepath.Join("/", s.root, hash, name)
 	header := filepath.Join("/", s.root, hash, name+".header")
 
-	//_, err := s.fs.Stat(path)
-	//if err != nil
-
 	err := s.fs.MkdirAll(filepath.Dir(path), perm)
 	if err != nil {
 		return e.Forward(err)
@@ -158,24 +155,13 @@ func (s *Storage) Store(d Document, r io.Reader, h map[string][]string) error {
 }
 
 // ReadTo retrives documents d and write it to w.
-func (s *Storage) ReadTo(d Document, w http.ResponseWriter) error {
+func (s *Storage) ReadTo(d Document, w http.ResponseWriter, code int) error {
 	s.lck.Lock()
 	defer s.lck.Unlock()
 	name := d.Name()
 	hash := d.RootDirHash()
 	path := filepath.Join("/", s.root, hash, name)
 	header := filepath.Join("/", s.root, hash, name+".header")
-
-	f, err := s.fs.Open(path)
-	if err != nil {
-		return e.Forward(err)
-	}
-	defer f.Close()
-
-	_, err = io.Copy(w, f)
-	if err != nil {
-		return e.Forward(err)
-	}
 
 	fh, err := s.fs.Open(header)
 	if err != nil {
@@ -191,10 +177,26 @@ func (s *Storage) ReadTo(d Document, w http.ResponseWriter) error {
 		return e.Forward(err)
 	}
 
+	hdr := w.Header()
 	for k, v := range h {
 		for _, item := range v {
-			w.Header().Add(k, item)
+			hdr.Add(k, item)
 		}
+	}
+
+	if code != 0 {
+		w.WriteHeader(code)
+	}
+
+	f, err := s.fs.Open(path)
+	if err != nil {
+		return e.Forward(err)
+	}
+	defer f.Close()
+
+	_, err = io.Copy(w, f)
+	if err != nil {
+		return e.Forward(err)
 	}
 
 	return nil

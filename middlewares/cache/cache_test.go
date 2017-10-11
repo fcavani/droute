@@ -91,7 +91,7 @@ func TestStorage(t *testing.T) {
 	}
 
 	resp := responsewriter.NewResponseWriter()
-	err = stg.ReadTo(doc, resp)
+	err = stg.ReadTo(doc, resp, 200)
 	if err != nil {
 		t.Fatal(err)
 	}
