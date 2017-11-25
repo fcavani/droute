@@ -170,6 +170,13 @@ func (m *MemSessions) sessionInc(uuid string) {
 	m.count[uuid] = m.count[uuid] + 1
 }
 
+func (m *MemSessions) sessionInUse(uuid string) bool {
+	if _, found := m.count[uuid]; !found {
+		return false
+	}
+	return m.count[uuid] > 0
+}
+
 func (m *MemSessions) sessionDec(uuid string) {
 	if _, found := m.count[uuid]; !found {
 		m.count[uuid] = 0
@@ -235,6 +242,16 @@ func (m *MemSessions) Restore(uuid string) (Session, error) {
 		return nil, e.New(ErrSessNotFound)
 	}
 
+	err := m.o.Del(s)
+	if err != nil {
+		return nil, e.Forward(err)
+	}
+	s.lastSeen = time.Now().Add(m.ttl)
+	err = m.o.Set(s)
+	if err != nil {
+		return nil, e.Forward(err)
+	}
+
 	m.sessionInc(uuid)
 
 	return s, nil
@@ -253,17 +270,19 @@ func (m *MemSessions) Delete(uuid string) error {
 
 	if count := m.sessionCount(uuid); count > 0 {
 		//wait for the session be give back
-		ch := make(chan struct{})
-		m.signal[uuid] = append(m.signal[uuid], ch)
-		m.lck.Unlock()
-		<-ch
-		m.lck.Lock()
+		// ch := make(chan struct{})
+		// m.signal[uuid] = append(m.signal[uuid], ch)
+		// m.lck.Unlock()
+		// <-ch
+		// m.lck.Lock()
+		return e.New(ErrSessInUse)
 	}
 
 	err := m.o.Del(s)
 	if err != nil {
 		return e.Forward(err)
 	}
+
 	delete(m.sessions, uuid)
 
 	return nil
@@ -282,11 +301,12 @@ func (m *MemSessions) del(tx *Transaction, uuid string) error {
 
 	if count := m.sessionCount(uuid); count > 0 {
 		//wait for the session be give back
-		ch := make(chan struct{})
-		m.signal[uuid] = append(m.signal[uuid], ch)
-		m.lck.Unlock()
-		<-ch
-		m.lck.Lock()
+		// ch := make(chan struct{})
+		// m.signal[uuid] = append(m.signal[uuid], ch)
+		// m.lck.Unlock()
+		// <-ch
+		// m.lck.Lock()
+		return e.New(ErrSessInUse)
 	}
 
 	err := tx.Del(s)
@@ -321,4 +341,32 @@ func (m *MemSessions) Return(s Session) error {
 	delete(m.signal, s.UUID())
 
 	return nil
+}
+
+func (m *MemSessions) IsInUse(uuid string) (bool, error) {
+	m.lck.Lock()
+	defer m.lck.Unlock()
+
+	_, found := m.sessions[uuid]
+	if !found {
+		return false, e.New(ErrSessNotFound)
+	}
+
+	return m.sessionInUse(uuid), nil
+}
+
+func (m *MemSessions) Ttl(uuid string) (time.Time, error) {
+	m.lck.Lock()
+	defer m.lck.Unlock()
+
+	s, found := m.sessions[uuid]
+	if !found {
+		return time.Time{}, e.New(ErrSessNotFound)
+	}
+
+	if s.lastSeen.Before(time.Now()) {
+		return time.Time{}, e.New(ErrSessExpired)
+	}
+
+	return s.lastSeen, nil
 }

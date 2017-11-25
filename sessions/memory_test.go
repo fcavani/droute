@@ -90,58 +90,19 @@ func TestMemSessions(t *testing.T) {
 	sessions = NewMemSessions(60*time.Second, 20*time.Second)
 }
 
-func TestSessionsNew(t *testing.T) {
-	s, err := sessions.New("abcd")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() {
-		err = sessions.Return(s)
-		if err != nil {
-			t.Fatal(err)
-		}
-	}()
-
-	_, err = sessions.New("abcd")
-	if err != nil && !e.Equal(err, ErrSessFound) {
-		t.Fatal(err)
-	} else if err == nil {
-		t.Fatal("err nil")
-	}
+func TestMemSessionsNew(t *testing.T) {
+	sessionsNew(t, sessions)
 }
 
-func TestSessionsRestore(t *testing.T) {
-	_, err := sessions.Restore("aaaaaa")
-	if err != nil && !e.Equal(err, ErrSessNotFound) {
-		t.Fatal(err)
-	} else if err == nil {
-		t.Fatal("err nil")
-	}
-
-	s, err := sessions.Restore("abcd")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() {
-		err = sessions.Return(s)
-		if err != nil {
-			t.Fatal(err)
-		}
-	}()
-
-	ss, err := sessions.Restore("abcd")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() {
-		err = sessions.Return(ss)
-		if err != nil {
-			t.Fatal(err)
-		}
-	}()
+func TestMemSessionsRestore(t *testing.T) {
+	sessionsRestore(t, sessions)
 }
 
-func TestSessionsDelete(t *testing.T) {
+func TestMemSessionsDelete2(t *testing.T) {
+	sessionsDelete(t, sessions)
+}
+
+func TestMemSessionsDelete(t *testing.T) {
 	err := sessions.Delete("zzzzzz....")
 	if err != nil && !e.Equal(err, ErrSessNotFound) {
 		t.Fatal(err)
@@ -149,10 +110,10 @@ func TestSessionsDelete(t *testing.T) {
 		t.Fatal("err nil")
 	}
 
-	err = sessions.Delete("abcd")
-	if err != nil {
-		t.Fatal(err)
-	}
+	// err = sessions.Delete("abcd")
+	// if err != nil {
+	// 	t.Fatal(err)
+	// }
 
 	s, err := sessions.New("abcd")
 	if err != nil {
@@ -182,41 +143,49 @@ func TestSessionsDelete(t *testing.T) {
 	}
 }
 
-func TestSessionsDel(t *testing.T) {
-	tx := NewTransaction()
+// func TestMemSessionsDel(t *testing.T) {
+// 	tx := NewTransaction()
+//
+// 	s, err := sessions.New("abcd")
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+//
+// 	ch := make(chan struct{})
+//
+// 	go func() {
+// 		err := sessions.(*MemSessions).del(tx, "abcd")
+// 		if err != nil {
+// 			t.Fatal(err)
+// 		}
+// 		ch <- struct{}{}
+// 	}()
+//
+// 	err = sessions.Return(s)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+//
+// 	select {
+// 	case <-ch:
+// 		o, err := tx.Commit(sessions.(*MemSessions).o)
+// 		if err != nil {
+// 			t.Fatal(err)
+// 		}
+// 		if len(o) > 0 {
+// 			t.Fatal("not deleted")
+// 		}
+// 	case <-time.After(time.Millisecond * 100):
+// 		t.Fatal("session not deleted")
+// 	}
+// }
 
-	s, err := sessions.New("abcd")
-	if err != nil {
-		t.Fatal(err)
-	}
+func TestMemSessionsInUse(t *testing.T) {
+	sessionsInUse(t, sessions)
+}
 
-	ch := make(chan struct{})
-
-	go func() {
-		err := sessions.(*MemSessions).del(tx, "abcd")
-		if err != nil {
-			t.Fatal(err)
-		}
-		ch <- struct{}{}
-	}()
-
-	err = sessions.Return(s)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	select {
-	case <-ch:
-		o, err := tx.Commit(sessions.(*MemSessions).o)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if len(o) > 0 {
-			t.Fatal("not deleted")
-		}
-	case <-time.After(time.Millisecond * 100):
-		t.Fatal("session not deleted")
-	}
+func TestMemSessionsTtl(t *testing.T) {
+	sessionsTtl(t, sessions)
 }
 
 func TestSessionsClose(t *testing.T) {

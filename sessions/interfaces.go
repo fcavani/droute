@@ -4,11 +4,15 @@
 
 package sessions
 
+import "time"
+
 type Sessions interface {
 	New(uuid string) (Session, error)
 	Restore(uuid string) (Session, error)
 	Delete(uuid string) error
 	Return(s Session) error
+	IsInUse(uuid string) (bool, error)
+	Ttl(uuid string) (time.Time, error)
 	Close() error
 }
 

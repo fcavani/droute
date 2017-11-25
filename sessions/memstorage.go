@@ -33,6 +33,7 @@ func (o Ordered) search(x interface{}) (i int, found bool) {
 }
 
 const ErrItemFound = "item found"
+const ErrInvData = "invalid data"
 
 func (o *Ordered) Set(data interface{}) error {
 	i, found := o.search(data.(KeyFielder).KeyField())
