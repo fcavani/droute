@@ -6,8 +6,8 @@ go:
 matrix:
   allow_failures:
     - go: tip
-install:
-  - go get -u github.com/kardianos/govendor
-  - govendor sync
+#install:
+#- go get -u github.com/kardianos/govendor
+#- govendor sync
 script:
   - go test -v ./...
