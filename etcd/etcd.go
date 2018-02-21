@@ -6,6 +6,7 @@ package etcd
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -20,7 +21,6 @@ import (
 	"github.com/spf13/viper"
 	"github.com/xordataexchange/crypt/config"
 	"github.com/xordataexchange/crypt/encoding/secconf"
-	"golang.org/x/net/context"
 )
 
 func LoadEtcdEndpoints(endpoints string) []string {
