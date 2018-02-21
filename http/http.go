@@ -12,7 +12,7 @@ import (
 	"net/http"
 
 	"github.com/fcavani/e"
-	"github.com/fcavani/log"
+	log "github.com/fcavani/slog"
 )
 
 // HTTPServer is a http and https server.

@@ -17,7 +17,7 @@ import (
 	h "github.com/fcavani/http"
 	"github.com/fcavani/http/typeparams"
 	"github.com/fcavani/http/useragent"
-	"github.com/fcavani/log"
+	log "github.com/fcavani/slog"
 )
 
 // DefaultLang is the default language. Need to be setted in the starup of the

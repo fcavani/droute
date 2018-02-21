@@ -20,7 +20,7 @@ import (
 	"time"
 
 	"github.com/fcavani/e"
-	"github.com/fcavani/log"
+	log "github.com/fcavani/slog"
 	"gopkg.in/fcavani/httprouter.v2"
 
 	drouterhttp "github.com/fcavani/droute/http"

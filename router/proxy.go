@@ -18,7 +18,7 @@ import (
 	"github.com/fcavani/droute/responsewriter"
 	"github.com/fcavani/e"
 	fhttp "github.com/fcavani/http"
-	"github.com/fcavani/log"
+	log "github.com/fcavani/slog"
 )
 
 // HTTPClient is the default client to contact the server.

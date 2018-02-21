@@ -15,7 +15,7 @@ import (
 
 	"github.com/fcavani/afero"
 	"github.com/fcavani/e"
-	"github.com/fcavani/log"
+	log "github.com/fcavani/slog"
 )
 
 var perm os.FileMode = 0770

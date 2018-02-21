@@ -16,7 +16,7 @@ import (
 
 	etcdCli "github.com/coreos/etcd/client"
 	"github.com/fcavani/e"
-	"github.com/fcavani/log"
+	log "github.com/fcavani/slog"
 	"github.com/spf13/viper"
 	"github.com/xordataexchange/crypt/config"
 	"github.com/xordataexchange/crypt/encoding/secconf"

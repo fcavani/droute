@@ -9,7 +9,7 @@ import (
 	"net/http"
 
 	"github.com/fcavani/e"
-	"github.com/fcavani/log"
+	log "github.com/fcavani/slog"
 )
 
 // ErrHandler trow a json error message with the code and the error.

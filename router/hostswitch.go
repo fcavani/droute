@@ -7,7 +7,7 @@ package router
 import (
 	"net/http"
 
-	"github.com/fcavani/log"
+	log "github.com/fcavani/slog"
 	"golang.org/x/net/idna"
 )
 

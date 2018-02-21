@@ -20,7 +20,8 @@ import (
 	"github.com/fcavani/droute/responsewriter"
 	"github.com/fcavani/droute/router"
 	"github.com/fcavani/e"
-	"github.com/fcavani/log"
+	log "github.com/fcavani/slog"
+	"github.com/fcavani/slog/systemd"
 	"github.com/fcavani/systemd/watchdog"
 	"github.com/fcavani/viperutil"
 	flag "github.com/spf13/pflag"
@@ -250,86 +251,32 @@ func main() {
 
 func setupLog(name string, level log.Level) {
 	fname := viper.GetStringMapString("log")["file"]
-	pname := viper.GetStringMapString("log")["panic"]
-	nostderr := viper.GetStringMap("log")["nostderr"].(bool)
 
-	if fname == "" && pname == "" {
+	if fname == "" {
 		log.Println("No log to file, log to stderr")
-		backend := log.NewWriter(os.Stderr).F(log.DefFormatter)
-		log.Log = log.New(backend, true).Domain(name).InfoLevel().SetLevel("all", level)
+		log.SetOutput(name, level, os.Stderr, nil, nil, 1000)
 		return
 	}
 
 	log.DebugLevel().Println("Open files...")
-	if fname == "" {
-		log.Fatal("log file name is empty")
-	}
-	if pname == "" {
-		log.Fatal("log panic file name is empty")
-	}
+
 	f, err := os.OpenFile(fname, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0600)
 	if err != nil {
 		log.Fatalln("open log file failed:", err)
-	}
-	p, err := os.OpenFile(pname, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0600)
-	if err != nil {
-		log.Fatalln("open panic log file failed:", err)
 	}
 
 	log.DebugLevel().Println("Files opened...")
 	log.DebugLevel().Println("Setup the logger...")
 
-	pid := os.Getpid()
-	pidstr := strconv.FormatInt(int64(pid), 10)
-	name = name + " (" + pidstr + ")"
-
-	wnormal := log.NewWriter(f).(*log.Writer)
-	wpanic := log.NewWriter(p).(*log.Writer)
-	outbuf := log.NewOutBuffer(wnormal, 5000)
-
-	stdoutFormater, err := log.NewStdFormatter(
-		"::",
-		"::date ::msg",
-		log.Log,
-		map[string]interface{}{},
-		"",
-	)
-	if err != nil {
-		log.Fatalln("log formatter failed:", err)
+	if systemd.Enabled() {
+		log.SetOutput(name, level, f, log.CommitSd, log.SdFormater, 1000)
+	} else {
+		log.SetOutput(name, level, f, nil, nil, 1000)
 	}
 
-	backend := log.NewMulti(
-		log.NewWriter(os.Stdout),
-		stdoutFormater, //log.DefFormatter,
-		log.Filter(
-			outbuf,
-			log.Op(log.Ne, "level", log.PanicPrio),
-		),
-		log.DefFormatter,
-		log.Filter(
-			wpanic,
-			log.Op(log.Eq, "level", log.PanicPrio),
-		),
-		log.DefFormatter,
-	)
-	if nostderr {
-		backend = log.NewMulti(
-			log.Filter(
-				outbuf,
-				log.Op(log.Ne, "level", log.PanicPrio),
-			),
-			log.DefFormatter,
-			log.Filter(
-				wpanic,
-				log.Op(log.Eq, "level", log.PanicPrio),
-			),
-			log.DefFormatter,
-		)
-	}
+	log.DebugInfo()
 
-	log.Log = log.New(backend, true).Domain(name).InfoLevel().SetLevel("all", level)
-
-	log.Println("Logger done...")
+	log.Println("Logger configured...")
 }
 
 func writePidFile(file string) error {

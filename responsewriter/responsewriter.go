@@ -9,7 +9,7 @@ import (
 	"net/http"
 
 	"github.com/fcavani/e"
-	"github.com/fcavani/log"
+	log "github.com/fcavani/slog"
 )
 
 // ResponseWriter implements the ResponseWriter interface

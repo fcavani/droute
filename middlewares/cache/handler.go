@@ -17,7 +17,7 @@ import (
 	"time"
 
 	"github.com/fcavani/e"
-	"github.com/fcavani/log"
+	log "github.com/fcavani/slog"
 
 	"github.com/fcavani/droute/responsewriter"
 )

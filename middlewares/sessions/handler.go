@@ -11,7 +11,7 @@ import (
 	"github.com/fcavani/droute/errhandler"
 	"github.com/fcavani/droute/sessions"
 	"github.com/fcavani/e"
-	"github.com/fcavani/log"
+	log "github.com/fcavani/slog"
 )
 
 func UserSession(r *http.Request) sessions.Session {
