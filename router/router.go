@@ -156,7 +156,7 @@ func (r *Router) Add(routerName, method, path, dst string) (err error) {
 				log.Errorf("Can't add route (%v, %v, %v) error: %v", routerName, method, path, err)
 				return
 			}
-			log.Printf("Route (%v, %v, %v) added.", routerName, method, path)
+			log.DebugLevel().Printf("Route (%v, %v, %v) added.", routerName, method, path)
 			return
 		}
 		switch x := r.(type) {
@@ -202,6 +202,7 @@ func (r *Router) Add(routerName, method, path, dst string) (err error) {
 	if h, _, _ := router.Lookup(method, path); h != nil {
 		// if the method/path exist return, or only add the new address for the
 		// new server.
+		log.DebugLevel().Printf("Route exists updating proxy. (%v, %v, %v => %v)", routerName, method, path, dst)
 		r.lb.AddAddrs(method, path, dst)
 		return
 	}
