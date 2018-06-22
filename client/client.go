@@ -175,6 +175,8 @@ func (r *Router) HandlerFunc(method, path string, handler http.HandlerFunc) erro
 }
 
 func (r *Router) handlerfunc(route *router.Route, handler http.HandlerFunc) (err error) {
+	var body []byte
+
 	defer func() {
 		if err != nil {
 			log.Errorf("Can't add handler (%v, %v, %v) error: %v", route.Router, route.Methode, route.Path, err)
@@ -215,7 +217,7 @@ func (r *Router) handlerfunc(route *router.Route, handler http.HandlerFunc) (err
 		return
 	case 422:
 		response := &router.Response{}
-		body, err := ioutil.ReadAll(io.LimitReader(resp.Body, BodyLimitSize))
+		body, err = ioutil.ReadAll(io.LimitReader(resp.Body, BodyLimitSize))
 		if err != nil {
 			err = e.Forward(err)
 			return
@@ -228,7 +230,7 @@ func (r *Router) handlerfunc(route *router.Route, handler http.HandlerFunc) (err
 		return response
 	case http.StatusInternalServerError:
 		operr := &router.OpErr{}
-		body, err := ioutil.ReadAll(io.LimitReader(resp.Body, BodyLimitSize))
+		body, err = ioutil.ReadAll(io.LimitReader(resp.Body, BodyLimitSize))
 		if err != nil {
 			err = e.Forward(err)
 			return
