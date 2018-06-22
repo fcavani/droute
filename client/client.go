@@ -91,6 +91,12 @@ func ConfigHTTPClient(certificate, privateKey, ca string, insecure bool) error {
 func (r *Router) Start() error {
 	r.once.Do(func() {
 		r.router = httprouter.New()
+		// TODO: Tirar isso daqui. Automatizar...
+		r.router.DefaultLang = "pt"
+		r.router.SupportedLangs = map[string]struct{}{
+			"pt": struct{}{},
+			"en": struct{}{},
+		}
 		r.routes = make(map[*router.Route]http.HandlerFunc)
 		go func() {
 			for {
