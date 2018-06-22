@@ -93,16 +93,18 @@ func (r *Router) Start() error {
 		r.router = httprouter.New()
 		r.routes = make(map[*router.Route]http.HandlerFunc)
 		go func() {
-			select {
-			case <-time.After(time.Minute):
-				r.lck.Lock()
-				for route, handler := range r.routes {
-					err := r.handlerfunc(route, handler)
-					if err == nil {
-						log.Errorf("Route re add to proxy: %v %v %v", route.Router, route.Methode, route.Path)
+			for {
+				select {
+				case <-time.After(time.Minute):
+					r.lck.Lock()
+					for route, handler := range r.routes {
+						err := r.handlerfunc(route, handler)
+						if err == nil {
+							log.Errorf("Route re add to proxy: %v %v %v", route.Router, route.Methode, route.Path)
+						}
 					}
+					r.lck.Unlock()
 				}
-				r.lck.Unlock()
 			}
 		}()
 	})
