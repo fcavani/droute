@@ -16,10 +16,10 @@ import (
 
 	"github.com/fcavani/e"
 	fhttp "github.com/fcavani/http"
-	"gopkg.in/fcavani/httprouter.v2"
 	log "github.com/fcavani/slog"
 	"github.com/fcavani/text"
 	"github.com/sony/gobreaker"
+	"gopkg.in/fcavani/httprouter.v2"
 
 	"github.com/fcavani/droute/errhandler"
 	"github.com/fcavani/droute/responsewriter"
@@ -152,6 +152,11 @@ func (r *Router) Add(routerName, method, path, dst string) (err error) {
 	defer func() {
 		r := recover()
 		if r == nil {
+			if err != nil {
+				log.Errorf("Can't add route (%v, %v, %v) error: %v", routerName, method, path, err)
+				return
+			}
+			log.Printf("Route (%v, %v, %v) added.", routerName, method, path)
 			return
 		}
 		switch x := r.(type) {
@@ -162,6 +167,7 @@ func (r *Router) Add(routerName, method, path, dst string) (err error) {
 		default:
 			err = e.New(fmt.Errorf("%v", x))
 		}
+		log.Errorf("Can't add route (%v, %v, %v) error: %v", routerName, method, path, err)
 	}()
 	err = text.CheckLettersNumber(routerName, 2, 128)
 	if err != nil && routerName != DefaultRouter {

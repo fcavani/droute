@@ -13,12 +13,14 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-
-	"github.com/fcavani/e"
-	"gopkg.in/fcavani/httprouter.v2"
-	neturl "github.com/fcavani/net/url"
+	"sync"
+	"time"
 
 	"github.com/fcavani/droute/router"
+	"github.com/fcavani/e"
+	neturl "github.com/fcavani/net/url"
+	log "github.com/fcavani/slog"
+	"gopkg.in/fcavani/httprouter.v2"
 )
 
 // Router agregate the methods to interact with the router server and add methods
@@ -33,6 +35,10 @@ type Router struct {
 	Addrs string
 
 	router *httprouter.Router
+
+	routes map[*router.Route]http.HandlerFunc
+	lck    sync.Mutex
+	once   sync.Once
 }
 
 //HTTPClient is the http.Client
@@ -83,7 +89,23 @@ func ConfigHTTPClient(certificate, privateKey, ca string, insecure bool) error {
 // Start initialize the router. Setup the server that will receive the income
 // requests and send it to the right route.
 func (r *Router) Start() error {
-	r.router = httprouter.New()
+	r.once.Do(func() {
+		r.router = httprouter.New()
+		r.routes = make(map[*router.Route]http.HandlerFunc)
+		go func() {
+			select {
+			case <-time.After(time.Minute):
+				r.lck.Lock()
+				for route, handler := range r.routes {
+					err := r.handlerfunc(route, handler)
+					if err == nil {
+						log.Errorf("Route re add to proxy: %v %v %v", route.Router, route.Methode, route.Path)
+					}
+				}
+				r.lck.Unlock()
+			}
+		}()
+	})
 	return nil
 }
 
@@ -131,22 +153,44 @@ func (r *Router) PUT(path string, handle http.HandlerFunc) error {
 var BodyLimitSize int64 = 1048576
 
 // HandlerFunc is a generic method to add a route into the router.
-func (r *Router) HandlerFunc(method, path string, handler http.HandlerFunc) (err error) {
+func (r *Router) HandlerFunc(method, path string, handler http.HandlerFunc) error {
+	r.lck.Lock()
+	defer r.lck.Unlock()
+
 	route := &router.Route{
 		Methode: method,
 		Router:  r.Router,
 		Path:    path,
 		RedirTo: r.Addrs,
 	}
-	buf, err := json.Marshal(route)
+
+	err := r.handlerfunc(route, handler)
 	if err != nil {
 		return e.Forward(err)
 	}
+
+	r.routes[route] = handler
+
+	return nil
+}
+
+func (r *Router) handlerfunc(route *router.Route, handler http.HandlerFunc) (err error) {
+	defer func() {
+		if err != nil {
+			log.Errorf("Can't add handler (%v, %v, %v) error: %v", route.Router, route.Methode, route.Path, err)
+		}
+	}()
+	buf, err := json.Marshal(route)
+	if err != nil {
+		err = e.Forward(err)
+		return
+	}
 	u := neturl.Copy(r.URL)
-	u.Path = "/_router/add"
+	u.Path = "/en/_router/add"
 	resp, err := HTTPClient.Post(u.String(), "application/json", bytes.NewReader(buf))
 	if err != nil {
-		return e.Forward(err)
+		err = e.Forward(err)
+		return
 	}
 	defer resp.Body.Close()
 	switch resp.StatusCode {
@@ -167,31 +211,36 @@ func (r *Router) HandlerFunc(method, path string, handler http.HandlerFunc) (err
 				}
 			}
 		}()
-		r.router.Handle(method, path, handler)
+		r.router.Handle(route.Methode, route.Path, handler)
 		return
 	case 422:
 		response := &router.Response{}
 		body, err := ioutil.ReadAll(io.LimitReader(resp.Body, BodyLimitSize))
 		if err != nil {
-			return e.Forward(err)
+			err = e.Forward(err)
+			return
 		}
 		err = json.Unmarshal(body, response)
 		if err != nil {
-			return e.Forward(err)
+			err = e.Forward(err)
+			return
 		}
 		return response
 	case http.StatusInternalServerError:
 		operr := &router.OpErr{}
 		body, err := ioutil.ReadAll(io.LimitReader(resp.Body, BodyLimitSize))
 		if err != nil {
-			return e.Forward(err)
+			err = e.Forward(err)
+			return
 		}
 		err = json.Unmarshal(body, operr)
 		if err != nil {
-			return e.Forward(err)
+			err = e.Forward(err)
+			return
 		}
 		return operr
 	default:
-		return e.New("failed to add a function handler to the router. (status code %v)", resp.StatusCode)
+		err = e.New("failed to add a function handler to the router. (status code %v)", resp.StatusCode)
+		return
 	}
 }
