@@ -28,8 +28,8 @@
     "pkg/types",
     "version"
   ]
-  revision = "28f3f26c0e303392556035b694f75768d449d33d"
-  version = "v3.3.1"
+  revision = "33245c6b5b49130ca99280408fadfab01aac0e48"
+  version = "v3.3.8"
 
 [[projects]]
   name = "github.com/coreos/go-semver"
@@ -40,20 +40,20 @@
 [[projects]]
   name = "github.com/coreos/go-systemd"
   packages = ["daemon"]
-  revision = "40e2722dffead74698ca12a750f64ef313ddce05"
-  version = "v16"
+  revision = "39ca1b05acc7ad1220e09f133283b8859a8b71ab"
+  version = "v17"
 
 [[projects]]
   branch = "master"
   name = "github.com/fcavani/afero"
   packages = ["."]
-  revision = "9ef031315d28710a81701ce2bd2981368c99a36b"
+  revision = "6e306319996020bafec7016e462d357f7d316d66"
 
 [[projects]]
   branch = "master"
   name = "github.com/fcavani/e"
   packages = ["."]
-  revision = "3b121fb8dfba29374e8998e1bbffec0d6e7b9790"
+  revision = "42e07cbcdd995edbe519ab69ecf66572fb010413"
 
 [[projects]]
   branch = "master"
@@ -72,7 +72,7 @@
     ".",
     "url"
   ]
-  revision = "f0b6ac276ed0daa9c06b11d0a567a9b2fc3a0748"
+  revision = "7724a5189c342ab78705732a59723b5234152e78"
 
 [[projects]]
   branch = "master"
@@ -87,7 +87,7 @@
     ".",
     "systemd"
   ]
-  revision = "485a694a56dda632513ebdc5325d192da496ad5d"
+  revision = "6248d754916ec9dee2ffe46b9ca2147f84e48914"
 
 [[projects]]
   branch = "master"
@@ -96,13 +96,13 @@
     "util",
     "watchdog"
   ]
-  revision = "d6fca8b3e60ccc8640f38b9db12e9e0ca78c0a00"
+  revision = "516d15e4abcdc6bfdcfcef31a4d01bfeef357620"
 
 [[projects]]
   branch = "master"
   name = "github.com/fcavani/text"
   packages = ["."]
-  revision = "5d6d3ca4daa085c73001ea370f92b9a067823577"
+  revision = "b5f799ea3c5e69590d000e16805cff2458140b2c"
 
 [[projects]]
   branch = "master"
@@ -131,14 +131,14 @@
 [[projects]]
   name = "github.com/golang/protobuf"
   packages = ["proto"]
-  revision = "925541529c1fa6821df4e44ce2723319eb2be768"
-  version = "v1.0.0"
+  revision = "b4deda0973fb4c70b50d226b1af49f3da59f5265"
+  version = "v1.1.0"
 
 [[projects]]
   name = "github.com/gorilla/securecookie"
   packages = ["."]
-  revision = "667fe4e3466a040b780561fe9b51a83a3753eefc"
-  version = "v1.1"
+  revision = "e59506cc896acb7f7bf732d4fdf5e25f7ccd8983"
+  version = "v1.1.1"
 
 [[projects]]
   branch = "master"
@@ -147,6 +147,7 @@
     ".",
     "hcl/ast",
     "hcl/parser",
+    "hcl/printer",
     "hcl/scanner",
     "hcl/strconv",
     "hcl/token",
@@ -154,25 +155,25 @@
     "json/scanner",
     "json/token"
   ]
-  revision = "23c074d0eceb2b8a5bfdbb271ab780cde70f05a8"
+  revision = "ef8a98b0bbce4a65b5aa4c368430a80ddc533168"
 
 [[projects]]
   name = "github.com/magiconair/properties"
   packages = ["."]
-  revision = "c3beff4c2358b44d0493c7dda585e7db7ff28ae6"
-  version = "v1.7.6"
+  revision = "c2353362d570a7bfa228149c62842019201cfb71"
+  version = "v1.8.0"
 
 [[projects]]
   branch = "master"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
-  revision = "00c29f56e2386353d58c599509e8dc3801b0d716"
+  revision = "bb74f1db0675b241733089d5a1faa5dd8b0ef57b"
 
 [[projects]]
   name = "github.com/pelletier/go-toml"
   packages = ["."]
-  revision = "acdc4509485b587f5e675510c4f2c63e90ff68a8"
-  version = "v1.1.0"
+  revision = "c01d1270ff3e442a8a57cddc1c92dc1138598194"
+  version = "v1.2.0"
 
 [[projects]]
   name = "github.com/sony/gobreaker"
@@ -186,8 +187,8 @@
     ".",
     "mem"
   ]
-  revision = "bb8f1927f2a9d3ab41c9340aa034f6b803f4359c"
-  version = "v1.0.2"
+  revision = "787d034dfe70e44075ccc060d346146ef53270ad"
+  version = "v1.1.1"
 
 [[projects]]
   name = "github.com/spf13/cast"
@@ -204,20 +205,20 @@
 [[projects]]
   name = "github.com/spf13/pflag"
   packages = ["."]
-  revision = "e57e3eeb33f795204c1ca35f56c44f83227c6e66"
-  version = "v1.0.0"
+  revision = "583c0c0531f06d5278b7d917446061adc344b5cd"
+  version = "v1.0.1"
 
 [[projects]]
   name = "github.com/spf13/viper"
   packages = ["."]
-  revision = "25b30aa063fc18e48662b86996252eabdcf2f0c7"
-  version = "v1.0.0"
+  revision = "b5e8006cbee93ec955a89ab31e0e3ce3204f3736"
+  version = "v1.0.2"
 
 [[projects]]
   name = "github.com/ugorji/go"
   packages = ["codec"]
-  revision = "9831f2c3ac1068a78f50999a30db84270f647af6"
-  version = "v1.1"
+  revision = "b4c50a2b199d93b13dc15e78929cfb23bfdf21ab"
+  version = "v1.1.1"
 
 [[projects]]
   branch = "master"
@@ -243,13 +244,13 @@
     "openpgp/packet",
     "openpgp/s2k"
   ]
-  revision = "432090b8f568c018896cd8a0fb0345872bbac6ce"
+  revision = "a49355c7e3f8fe157a85be2f77e6e269a0f89602"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/exp"
   packages = ["utf8string"]
-  revision = "83bc9a11ae1a00a79c4e59fc5d965d21fe14e6bb"
+  revision = "f5f346835693c5509c511fda7249a6f30302bf53"
 
 [[projects]]
   branch = "master"
@@ -258,16 +259,15 @@
     "context",
     "idna"
   ]
-  revision = "cbe0f9307d0156177f9dd5dc85da1a31abc5f2fb"
+  revision = "afe8f62b1d6bbd81f31868121a50b06d8188e1f9"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "37707fdb30a5b38865cfb95e5aab41707daec7fd"
+  revision = "63fc586f45fe72d95d5240a5d5eb95e6503907d3"
 
 [[projects]]
-  branch = "master"
   name = "golang.org/x/text"
   packages = [
     "collate",
@@ -285,7 +285,8 @@
     "unicode/norm",
     "unicode/rangetable"
   ]
-  revision = "9e2b64d659da1afe07ce1c9c1dfefc09d188f21e"
+  revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
+  version = "v0.3.0"
 
 [[projects]]
   name = "google.golang.org/appengine"
@@ -300,14 +301,14 @@
     "internal/modules",
     "internal/remote_api"
   ]
-  revision = "150dc57a1b433e64154302bdc40b6bb8aefa313a"
-  version = "v1.0.0"
+  revision = "b1f26356af11148e710935ed1ac8a7f5702c7612"
+  version = "v1.1.0"
 
 [[projects]]
   branch = "v2"
   name = "gopkg.in/fcavani/httprouter.v2"
   packages = ["."]
-  revision = "7f1a337e7d4c505411452972cefa339f09106bdf"
+  revision = "6efb072b4b4a77a54a7310ffda6d87c93bcf82a0"
 
 [[projects]]
   name = "gopkg.in/vmihailenco/msgpack.v2"
@@ -319,14 +320,14 @@
   version = "v2.9.1"
 
 [[projects]]
-  branch = "v2"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "d670f9405373e636a5a2765eea47fac0c9bc91a4"
+  revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
+  version = "v2.2.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "9feb57bb06c7e2201508a439098364784f900d33dd9e6a5b7b8a091ff4683e05"
+  inputs-digest = "5826762a880896b93f75561e0fdb2ce140f22cacc3ce8f1aec8e916f4f1cf45c"
   solver-name = "gps-cdcl"
   solver-version = 1

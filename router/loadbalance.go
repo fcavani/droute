@@ -15,6 +15,7 @@ import (
 
 	"github.com/fcavani/droute/errhandler"
 	"github.com/fcavani/droute/responsewriter"
+	"gopkg.in/fcavani/httprouter.v2"
 )
 
 const ctxName string = "proxyredirdst"
@@ -163,7 +164,12 @@ func Balance(lb LoadBalance, handler responsewriter.HandlerFunc) responsewriter.
 	return func(rw *responsewriter.ResponseWriter, req *http.Request) {
 		dst := lb.Next(req.Method, req.URL.Path)
 		if dst == "" {
-			log.Tag("router", "loadbalance").DebugLevel().Println("no proxy ip")
+			log.Tag("router", "loadbalance").DebugLevel().Printf(
+				"no proxy ip (%v, %v, %v)",
+				req.Method,
+				req.URL.Path,
+				httprouter.ContentLang(req),
+			)
 			errhandler.ErrHandler(rw, http.StatusInternalServerError, e.New("no proxy ip address"))
 			return
 		}
