@@ -163,8 +163,11 @@ func (rr *RoundRobin) Remove(method, path, target string) {
 func Balance(lb LoadBalance, handler responsewriter.HandlerFunc) responsewriter.HandlerFunc {
 	return func(rw *responsewriter.ResponseWriter, req *http.Request) {
 		lang := httprouter.ContentLang(req)
-		req.URL.Path = strings.TrimPrefix(req.URL.Path, "/"+lang)
-		dst := lb.Next(req.Method, req.URL.Path)
+		path := req.URL.Path
+		if lang != "" {
+			path = strings.TrimPrefix(req.URL.Path, "/"+lang)
+		}
+		dst := lb.Next(req.Method, path)
 		if dst == "" {
 			log.Tag("router", "loadbalance").DebugLevel().Printf(
 				"no proxy ip (%v, %v, %v)",
