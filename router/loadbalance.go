@@ -181,7 +181,8 @@ func Balance(lb LoadBalance, handler responsewriter.HandlerFunc) responsewriter.
 		req = req.WithContext(context.WithValue(req.Context(), ctxName, dst))
 		handler(rw, req)
 		code := rw.ResponseCode()
-		if code >= 500 && code < 600 {
+		// TODO: 500 is for server error not fatal...
+		if code > 500 && code < 600 {
 			log.Tag("router", "loadbalance").DebugLevel().Printf("remove proxy %v (%v)", dst, code)
 			lb.Remove(req.Method, req.URL.Path, dst)
 		}
