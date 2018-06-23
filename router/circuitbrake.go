@@ -34,7 +34,8 @@ func CircuitBrake(cbs Cbs, handler responsewriter.HandlerFunc) responsewriter.Ha
 		_, err := cb.Execute(func() (interface{}, error) {
 			handler(rw, req)
 			code := rw.ResponseCode()
-			if code >= 500 && code < 600 {
+			// TODO: 500 is for server error not fatal...
+			if code > 500 && code < 600 {
 				return nil, e.New("server fail")
 			}
 			return nil, nil
