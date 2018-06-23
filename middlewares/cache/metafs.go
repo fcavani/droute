@@ -12,6 +12,7 @@ import (
 
 	"github.com/fcavani/afero"
 	"github.com/fcavani/e"
+	"gopkg.in/fcavani/httprouter.v2"
 
 	"github.com/fcavani/droute/middlewares/request"
 )
@@ -20,13 +21,21 @@ import (
 func MetaFS(fs afero.Fs, prefix string) Meta {
 	return func(r *http.Request) (Document, *http.Request, error) {
 		req := request.Request(r)
-		up, err := url.PathUnescape(req.URL().Path)
+		path := req.URL().Path
+		lang := httprouter.ContentLang(r)
+		if lang != "" {
+			p := strings.TrimPrefix(path, "/"+lang)
+			if len(p) < len(path) {
+				path = p
+			}
+		}
+		up, err := url.PathUnescape(path)
 		if err != nil {
 			return nil, nil, e.Forward(err)
 		}
 		//path := filepath.Join(dir, strings.TrimPrefix(up, prefix))
-		path := filepath.Clean(strings.TrimPrefix(up, prefix))
-		fi, err := fs.Stat(path)
+		cleanpath := filepath.Clean(strings.TrimPrefix(up, prefix))
+		fi, err := fs.Stat(cleanpath)
 		if err != nil {
 			return nil, nil, e.Forward(err)
 		}
@@ -38,7 +47,7 @@ func MetaFS(fs afero.Fs, prefix string) Meta {
 			Mime:      "",
 			UserAgent: req.Useragent().String(),
 			Hash:      "",
-			Extension: filepath.Ext(path),
+			Extension: filepath.Ext(cleanpath),
 		}
 
 		doc.ComposeFileName(r)
