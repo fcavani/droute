@@ -33,7 +33,6 @@ func MetaFS(fs afero.Fs, prefix string) Meta {
 		if err != nil {
 			return nil, nil, e.Forward(err)
 		}
-		//path := filepath.Join(dir, strings.TrimPrefix(up, prefix))
 		cleanpath := filepath.Clean(strings.TrimPrefix(up, prefix))
 		fi, err := fs.Stat(cleanpath)
 		if err != nil {
