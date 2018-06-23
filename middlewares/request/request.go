@@ -17,6 +17,7 @@ import (
 	h "github.com/fcavani/http"
 	"github.com/fcavani/http/typeparams"
 	"github.com/fcavani/http/useragent"
+	"github.com/fcavani/net/dns"
 	log "github.com/fcavani/slog"
 )
 
@@ -31,6 +32,7 @@ type Config struct {
 	AcceptedEncoding   []string
 	AcceptedMedias     []string
 	AcceptedCharsets   []string
+	Localhosts         []string
 }
 
 // DefaultRequestConfig is a simple default config for request.
@@ -43,6 +45,7 @@ func init() {
 		AcceptedEncoding:   []string{"gzip", "compress", "deflate", "identity"},
 		AcceptedMedias:     []string{"text/html", "image/jpeg", "image/png", "image/webp", "image/gif"},
 		AcceptedCharsets:   []string{"utf-8"},
+		Localhosts:         []string{},
 	}
 
 	err := rc.AcceptedUserAgents.Push("Mozilla", ">=4")
@@ -66,18 +69,43 @@ func init() {
 
 // UserRequest provide methods to access the user request information.
 type UserRequest struct {
-	rc       *Config
-	r        *http.Request
-	language string
-	ua       *useragent.Product
-	ip       string
-	url      *url.URL
-	referrer *url.URL
-	query    map[string]string
-	charset  string
-	media    string
-	encoding string
-	timezone *time.Location
+	rc              *Config
+	r               *http.Request
+	language        string
+	ua              *useragent.Product
+	ip              string
+	url             *url.URL
+	referrer        *url.URL
+	query           map[string]string
+	charset         string
+	media           string
+	encoding        string
+	timezone        *time.Location
+	localhosts      bool
+	localhostCached bool
+}
+
+// IsLocalhost is local host.
+func (ur *UserRequest) IsLocalhost() bool {
+	if ur.localhostCached {
+		return ur.localhosts
+	}
+	for _, host := range ur.rc.Localhosts {
+		addrs, err := dns.LookupHost(host)
+		if err != nil {
+			return false
+		}
+		for _, addr := range addrs {
+			if addr == ur.IP() {
+				ur.localhostCached = true
+				ur.localhosts = true
+				return true
+			}
+		}
+	}
+	ur.localhostCached = true
+	ur.localhosts = false
+	return false
 }
 
 // Media return the accepted media by the user.
