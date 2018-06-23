@@ -8,13 +8,13 @@ import (
 	"gopkg.in/fcavani/httprouter.v2"
 )
 
-func StripPrefix(prefix string, h Handler) http.Handler {
+func StripPrefix(prefix string, h http.Handler) http.Handler {
 	if prefix == "" {
 		return h
 	}
-	return HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path
-		lang := httprouter.ContentLang(req)
+		lang := httprouter.ContentLang(r)
 		if lang != "" {
 			p := strings.TrimPrefix(path, "/"+lang)
 			if len(p) < len(path) {
