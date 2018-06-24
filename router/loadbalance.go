@@ -213,6 +213,9 @@ func findPath(m map[string]*ips, path string) *ips {
 }
 
 func matchWildcard(path, k string) bool {
+	if k == "/" {
+		return false
+	}
 	s := strings.Split(k, "/*")
 	if len(s) > 0 {
 		if strings.HasPrefix(path, s[0]) {
