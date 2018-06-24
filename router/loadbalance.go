@@ -219,7 +219,6 @@ func matchWildcard(path, k string) bool {
 	s := strings.Split(k, "/*")
 	if len(s) > 0 {
 		if strings.HasPrefix(path, s[0]) {
-			log.Println("#####", k, path)
 			return true
 		}
 	}
