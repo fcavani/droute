@@ -69,7 +69,7 @@ func TestRouter(t *testing.T) {
 	r.SetHTTPSAddr("foo")
 
 	w := responsewriter.NewResponseWriter()
-	req, err := http.NewRequest("GET", "http://localhost", nil)
+	req, err := http.NewRequest("GET", "http://localhost/en", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -102,7 +102,7 @@ func TestRouter2(t *testing.T) {
 	}
 
 	w := responsewriter.NewResponseWriter()
-	req, err := http.NewRequest("GET", "http://localhost/", bytes.NewBufferString("oi"))
+	req, err := http.NewRequest("GET", "http://localhost/en/", bytes.NewBufferString("oi"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -303,7 +303,7 @@ func TestRouterAddHandler(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	req, err := http.NewRequest("POST", "http://localhost/_router/add", bytes.NewBuffer(buf))
+	req, err := http.NewRequest("POST", "http://localhost/en/_router/add", bytes.NewBuffer(buf))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -331,7 +331,7 @@ func TestRouterAddHandler(t *testing.T) {
 		t.Fatal("wrong operation", resp.Op)
 	}
 
-	req, err = http.NewRequest("POST", "http://localhost/_router/add", bytes.NewBuffer(buf))
+	req, err = http.NewRequest("POST", "http://localhost/en/_router/add", bytes.NewBuffer(buf))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -342,7 +342,7 @@ func TestRouterAddHandler(t *testing.T) {
 		t.Fatal("wrong response code", code)
 	}
 
-	req, err = http.NewRequest("POST", "http://localhost/_router/add", bytes.NewBuffer(buf))
+	req, err = http.NewRequest("POST", "http://localhost/en/_router/add", bytes.NewBuffer(buf))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -353,7 +353,7 @@ func TestRouterAddHandler(t *testing.T) {
 		t.Fatal("wrong response code", code)
 	}
 
-	req, err = http.NewRequest("POST", "http://localhost/_router/add", bytes.NewBufferString(strings.Repeat("a", int(BodyLimitSize)+1)))
+	req, err = http.NewRequest("POST", "http://localhost/en/_router/add", bytes.NewBufferString(strings.Repeat("a", int(BodyLimitSize)+1)))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -387,7 +387,7 @@ func TestRouterAddHandler(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	req, err = http.NewRequest("POST", "http://localhost/_router/add", bytes.NewBuffer(buf))
+	req, err = http.NewRequest("POST", "http://localhost/en/_router/add", bytes.NewBuffer(buf))
 	if err != nil {
 		t.Fatal(err)
 	}

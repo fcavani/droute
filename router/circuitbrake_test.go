@@ -14,10 +14,10 @@ import (
 func TestBrake(t *testing.T) {
 	dst := "10.0.1.1"
 	rr := NewRoundRobin()
-	rr.AddAddrs("GET", "", dst)
+	rr.AddAddrs("GET", "/", dst)
 	cbs := make(Cbs)
 	rw := responsewriter.NewResponseWriter()
-	r, err := http.NewRequest("GET", "http://localhost", nil)
+	r, err := http.NewRequest("GET", "http://localhost/en", nil)
 	if err != nil {
 		t.Fatal(err)
 	}

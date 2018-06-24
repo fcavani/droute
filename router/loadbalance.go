@@ -224,5 +224,5 @@ func matchNamedParam(path, k string) bool {
 			return false
 		}
 	}
-	return true
+	return path == k
 }

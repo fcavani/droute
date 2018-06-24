@@ -36,10 +36,10 @@ func TestRouter(t *testing.T) {
 	dr = new(router.Router)
 	routers := router.NewRouters()
 	def := routers.Get(router.DefaultRouter)
-	def.Context = func(ctx context.Context) context.Context {
+	def.Context = func(ctx context.Context) (context.Context, context.CancelFunc) {
 		ctx, _ = router.WithSignal(ctx, os.Interrupt, os.Kill)
 		ctx, _ = context.WithDeadline(ctx, time.Now().Add(100*time.Millisecond))
-		return ctx
+		return ctx, nil
 	}
 	err := dr.Start(
 		routers,
@@ -491,7 +491,7 @@ func Test422(t *testing.T) {
 		}
 	}
 
-	resp, err := httpClient.Get("https://localhost:8086/")
+	resp, err := httpClient.Get("https://localhost:8086/en/")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -570,7 +570,7 @@ func Test500(t *testing.T) {
 		}
 	}
 
-	resp, err := httpClient.Get("https://localhost:8006/")
+	resp, err := httpClient.Get("https://localhost:8006/en/")
 	if err != nil {
 		t.Fatal(err)
 	}

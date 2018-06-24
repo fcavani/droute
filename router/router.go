@@ -199,7 +199,7 @@ func (r *Router) Add(routerName, method, path, dst string) (err error) {
 		return
 	}
 
-	if h, _, _ := router.Lookup(method, path); h != nil {
+	if h, _, redir := router.Lookup(method, path); h != nil || redir {
 		// if the method/path exist return, or only add the new address for the
 		// new server.
 		log.DebugLevel().Printf("Route exists updating proxy. (%v, %v, %v => %v)", routerName, method, path, dst)
