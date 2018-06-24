@@ -206,11 +206,19 @@ func findPath(m map[string]*ips, path string) *ips {
 	for k, p := range m {
 		log.Println("#####", k, path)
 		//if strings.Contains(k, "/*") || matchNamedParam(path, k) {
-		if strings.Contains(k, path+"/*") || matchNamedParam(path, k) {
+		if matchWildcard(path, k) || matchNamedParam(path, k) {
 			return p
 		}
 	}
 	return nil
+}
+
+func matchWildcard(path, k string) bool {
+	s := strings.Split(k, "/*")
+	if len(s) > 0 {
+		return strings.HasPrefix(path, s[0])
+	}
+	return false
 }
 
 func matchNamedParam(path, k string) bool {
