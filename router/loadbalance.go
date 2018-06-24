@@ -178,6 +178,13 @@ func Balance(lb LoadBalance, handler responsewriter.HandlerFunc) responsewriter.
 			errhandler.ErrHandler(rw, http.StatusInternalServerError, e.New("no proxy ip address"))
 			return
 		}
+		log.Tag("router", "loadbalance").DebugLevel().Printf(
+			"Proxy ip: %v (%v, %v, %v)",
+			dst,
+			req.Method,
+			req.URL.Path,
+			lang,
+		)
 		req = req.WithContext(context.WithValue(req.Context(), ctxName, dst))
 		handler(rw, req)
 		code := rw.ResponseCode()
