@@ -221,6 +221,7 @@ func (r *Router) Add(routerName, method, path, dst string) (err error) {
 		),
 	)
 	r.lb.AddAddrs(method, path, dst)
+	log.DebugLevel().Printf("Route add to proxy. (%v, %v, %v => %v)", routerName, method, path, dst)
 	return
 }
 
