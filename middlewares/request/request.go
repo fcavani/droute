@@ -234,6 +234,7 @@ func (ur *UserRequest) URL() *url.URL {
 	root := ""
 	ur.url, err = h.Url(ur.r, root)
 	if err != nil {
+		log.Errorf("Error to extract url from request: %v", err)
 		return nil
 	}
 	return ur.url

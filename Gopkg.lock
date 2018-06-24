@@ -70,6 +70,7 @@
   name = "github.com/fcavani/net"
   packages = [
     ".",
+    "dns",
     "url"
   ]
   revision = "7724a5189c342ab78705732a59723b5234152e78"
@@ -123,6 +124,12 @@
   revision = "fea72d1d391cd3dbaf4b906b5913fc771f21a7ae"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/fcavani/zeroconf"
+  packages = ["."]
+  revision = "367dc0c25cef6bce0c48045f1cff9e0d68de6930"
+
+[[projects]]
   name = "github.com/fsnotify/fsnotify"
   packages = ["."]
   revision = "c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9"
@@ -162,6 +169,12 @@
   packages = ["."]
   revision = "c2353362d570a7bfa228149c62842019201cfb71"
   version = "v1.8.0"
+
+[[projects]]
+  name = "github.com/miekg/dns"
+  packages = ["."]
+  revision = "5a2b9fab83ff0f8bfc99684bd5f43a37abe560f1"
+  version = "v1.0.8"
 
 [[projects]]
   branch = "master"
@@ -215,6 +228,22 @@
   version = "v1.0.2"
 
 [[projects]]
+  name = "github.com/tdewolff/minify"
+  packages = ["."]
+  revision = "8d72a4127ae33b755e95bffede9b92e396267ce2"
+  version = "v2.3.5"
+
+[[projects]]
+  name = "github.com/tdewolff/parse"
+  packages = [
+    ".",
+    "buffer",
+    "strconv"
+  ]
+  revision = "d739d6fccb0971177e06352fea02d3552625efb1"
+  version = "v2.3.3"
+
+[[projects]]
   name = "github.com/ugorji/go"
   packages = ["codec"]
   revision = "b4c50a2b199d93b13dc15e78929cfb23bfdf21ab"
@@ -237,6 +266,8 @@
   name = "golang.org/x/crypto"
   packages = [
     "cast5",
+    "ed25519",
+    "ed25519/internal/edwards25519",
     "openpgp",
     "openpgp/armor",
     "openpgp/elgamal",
@@ -256,8 +287,13 @@
   branch = "master"
   name = "golang.org/x/net"
   packages = [
+    "bpf",
     "context",
-    "idna"
+    "idna",
+    "internal/iana",
+    "internal/socket",
+    "ipv4",
+    "ipv6"
   ]
   revision = "afe8f62b1d6bbd81f31868121a50b06d8188e1f9"
 
@@ -308,7 +344,7 @@
   branch = "v2"
   name = "gopkg.in/fcavani/httprouter.v2"
   packages = ["."]
-  revision = "6efb072b4b4a77a54a7310ffda6d87c93bcf82a0"
+  revision = "d6eaf986581ea2a400afb6cd2bb3e0b4d6ccf283"
 
 [[projects]]
   name = "gopkg.in/vmihailenco/msgpack.v2"
@@ -328,6 +364,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "5826762a880896b93f75561e0fdb2ce140f22cacc3ce8f1aec8e916f4f1cf45c"
+  inputs-digest = "a0305569d0df5101f5fe64df91fda1742a81169555e32ad7d4b2736c4971cd69"
   solver-name = "gps-cdcl"
   solver-version = 1

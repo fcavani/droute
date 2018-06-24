@@ -197,7 +197,8 @@ func findPath(m map[string]*ips, path string) *ips {
 		return p
 	}
 	for k, p := range m {
-		if strings.Contains(k, "/*") || matchNamedParam(path, k) {
+		//if strings.Contains(k, "/*") || matchNamedParam(path, k) {
+		if path+"/*" == k || matchNamedParam(path, k) {
 			return p
 		}
 	}
