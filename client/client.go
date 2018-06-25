@@ -174,7 +174,7 @@ func (r *Router) HandlerFunc(method, path string, handler http.HandlerFunc) erro
 
 	err := r.handlerfunc(route, handler)
 	if err != nil {
-		return e.Forward(err)
+		return err
 	}
 
 	r.routes[route] = handler

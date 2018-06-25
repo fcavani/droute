@@ -17,14 +17,14 @@ func TestBrake(t *testing.T) {
 	rr.AddAddrs("GET", "/", dst)
 	cbs := make(Cbs)
 	rw := responsewriter.NewResponseWriter()
-	r, err := http.NewRequest("GET", "http://localhost/en", nil)
+	r, err := http.NewRequest("GET", "http://localhost/", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	h := Balance(rr, CircuitBrake(cbs, func(rw *responsewriter.ResponseWriter, r *http.Request) {
 		proxy := r.Context().Value("proxyredirdst").(string)
-		t.Log(proxy)
+		t.Log(r.URL, proxy)
 		rw.WriteHeader(200)
 	}))
 	h(rw, r)
@@ -41,7 +41,7 @@ func TestBrake(t *testing.T) {
 	h = Balance(rr, CircuitBrake(cbs, func(rw *responsewriter.ResponseWriter, r *http.Request) {
 		proxy := r.Context().Value("proxyredirdst").(string)
 		t.Log(proxy)
-		rw.WriteHeader(500)
+		rw.WriteHeader(501)
 	}))
 	h(rw, r)
 	if code := rw.ResponseCode(); code != 500 {
