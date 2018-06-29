@@ -17,12 +17,15 @@ func ErrHandler(w http.ResponseWriter, code int, err error) {
 	if err == nil {
 		return
 	}
+	log.Tag("error", "handlers").DebugLevel().Println(e.Trace(e.Forward(err)))
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(code)
 	resp := struct {
+		Code  int    `jsong:"code"`
 		Err   string `json:"err"`
 		Human string `json:"human"`
 	}{
+		Code:  code,
 		Err:   err.Error(),
 		Human: e.Human(err),
 	}
@@ -30,4 +33,5 @@ func ErrHandler(w http.ResponseWriter, code int, err error) {
 	if er != nil {
 		log.Tag("router", "server", "proxy").Error(er)
 	}
+}
 }
