@@ -6,6 +6,7 @@ package client
 
 import (
 	"bytes"
+	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
@@ -22,6 +23,11 @@ import (
 	log "github.com/fcavani/slog"
 	"gopkg.in/fcavani/httprouter.v2"
 )
+
+// TODO: Default router client on package level
+var DefaultRouter *Router
+
+// TODO: HTTP in the Router struct too.
 
 // Router agregate the methods to interact with the router server and add methods
 // to it.
@@ -45,7 +51,9 @@ type Router struct {
 var HTTPClient *http.Client
 
 func init() {
-	HTTPClient = http.DefaultClient
+	if HTTPClient == nil {
+		HTTPClient = http.DefaultClient
+	}
 }
 
 // ConfigHTTPClient config the http client that is used by do method to access
@@ -252,5 +260,83 @@ func (r *Router) handlerfunc(route *router.Route, handler http.HandlerFunc) (err
 	default:
 		err = e.New("failed to add a function handler to the router. (status code %v)", resp.StatusCode)
 		return
+	}
+}
+
+func (r *Router) PathExist(path string) bool {
+	routes, err := r.getRoutes(context.TODO(), r.Router)
+	if err != nil {
+		return false
+	}
+	return routes.Search(path)
+}
+
+func (r *Router) GetRoutes(ctx context.Context) (Routes, error) {
+	return r.getRoutes(ctx, r.Router)
+}
+
+func (r *Router) getRoutes(ctx context.Context, routeName string) (router.Routes, error) {
+	var body []byte
+
+	route := Route{
+		Router: routeName,
+	}
+
+	buf, err := json.Marshal(route)
+	if err != nil {
+		return nil, e.Forward(err)
+	}
+
+	u := neturl.Copy(r.URL)
+	u.Path = "/en/_router/get"
+	req, err := http.NewRequest("GET", u.String(), bytes.NewReader(buf))
+	if err != nil {
+		return nil, e.New(err)
+	}
+	req = req.WithContext(ctx)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := HTTPClient.Do(req)
+	if err != nil {
+		return nil, e.Forward(err)
+	}
+	defer resp.Body.Close()
+
+	switch resp.StatusCode {
+	case http.StatusFound:
+		response := &router.ResponseRoutes{}
+		body, err = ioutil.ReadAll(io.LimitReader(resp.Body, BodyLimitSize))
+		if err != nil {
+			return nil, e.Forward(err)
+		}
+		err = json.Unmarshal(body, response)
+		if err != nil {
+			return nil, e.Forward(err)
+		}
+		return response.Routes, nil
+	case 422:
+		response := &router.ResponseRoutes{}
+		body, err = ioutil.ReadAll(io.LimitReader(resp.Body, BodyLimitSize))
+		if err != nil {
+			return nil, e.Forward(err)
+		}
+		err = json.Unmarshal(body, response)
+		if err != nil {
+			return nil, e.Forward(err)
+		}
+		return nil, response
+	case http.StatusInternalServerError:
+		operr := &router.OpErr{}
+		body, err = ioutil.ReadAll(io.LimitReader(resp.Body, BodyLimitSize))
+		if err != nil {
+			return nil, e.Forward(err)
+		}
+		err = json.Unmarshal(body, operr)
+		if err != nil {
+			return nil, e.Forward(err)
+		}
+		return nil, operr
+	default:
+		return nil, e.New("failed to get routes. (status code %v)", resp.StatusCode)
 	}
 }

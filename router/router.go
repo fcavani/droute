@@ -234,11 +234,23 @@ func (r *Router) Add(routerName, method, path, dst string) (err error) {
 // 	router.
 // }
 
-// func (r *Router) Get(routerName string) (rs Routes, err error) {
-// 		router.HandlerPaths(true, func(method string, path string, h http.HandlerFunc) bool {
-//
-// 		})
-// }
+func (r *Router) Get(routerName string) (rs Routes, err error) {
+	router := r.routers.Get(routerName)
+	if router == nil {
+		return nil, e.New("router not found")
+	}
+	routes := make(Routes, 0)
+	router.HandlerPaths(true, func(method string, path string, h http.HandlerFunc) bool {
+		routes = append(routes, &Route{
+			Methode: method,
+			Router:  routerName,
+			Path:    path,
+			RedirTo: "", // TODO: RetidTo
+		})
+		return true
+	})
+	return routes, nil
+}
 
 // AddRoute adds a new route to the router. If routerName doesn't exist add route
 // to the default router.
@@ -287,11 +299,11 @@ func (r *Router) routes() {
 	// )
 
 	// Get return all routes.
-	// def.GET("/_router/get",
-	// 	localhost(
-	// 		getRoute(r),
-	// 	),
-	// )
+	def.GET("/_router/get",
+		localhost(
+			getRoute(r),
+		),
+	)
 }
 
 // Op is a operation in the router.
@@ -306,7 +318,7 @@ const (
 	RouteOpGet Op = "get"
 )
 
-// Routes discrible a group of routes.
+// Routes describe a group of routes.
 type Routes []*Route
 
 // Route define one route.
@@ -315,6 +327,17 @@ type Route struct {
 	Router  string
 	Path    string
 	RedirTo string
+}
+
+func (rs Routes) Search(path string) bool {
+	for _, r := range rs {
+		if r.Path == path {
+			return true
+		} else if matchWildcard(r.Path, path) || matchNamedParam(r.Path, path) {
+			return true
+		}
+	}
+	return false
 }
 
 // BodyLimitSize is the max request body size.
@@ -372,11 +395,47 @@ func addRoute(r *Router) func(w http.ResponseWriter, req *http.Request) {
 // 	}
 // }
 
-// func getRoute(r *Router) func(w http.ResponseWriter, req *http.Request) {
-// 	return func(w http.ResponseWriter, req *http.Request) {
-//
-// 	}
-// }
+func getRoute(r *Router) func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
+		var route Route
+		body, err := ioutil.ReadAll(io.LimitReader(req.Body, BodyLimitSize))
+		if err != nil {
+			respError(w, http.StatusInternalServerError, err.Error(), RouteOpGet)
+			return
+		}
+		err = req.Body.Close()
+		if err != nil {
+			respError(w, http.StatusInternalServerError, err.Error(), RouteOpGet)
+			return
+		}
+		err = json.Unmarshal(body, &route)
+		if err != nil {
+			respError(w, http.StatusInternalServerError, err.Error(), RouteOpGet)
+			return
+		}
+		rs, err := r.Get(route.Router)
+		if err != nil {
+			responseRoutes(
+				w,
+				422, // unprocessable entity
+				route.Router,
+				err.Error(),
+				RouteOpGet,
+				nil,
+			)
+			return
+		}
+		responseRoutes(
+			w,
+			http.StatusFound,
+			route.Router,
+			err.Error(),
+			RouteOpGet,
+			rs,
+		)
+		return
+	}
+}
 
 //OpErr handle the error to the client.
 type OpErr struct {
@@ -440,6 +499,40 @@ func response(w http.ResponseWriter, code int, methode, routerName, path, err st
 		Path:    path,
 		Err:     err,
 		Op:      string(op),
+	}
+	er := json.NewEncoder(w).Encode(resp)
+	if er != nil {
+		log.Tag("router", "server", "rest").Error(er)
+	}
+}
+
+type ResponseRoutes struct {
+	Router string `json:"router"`
+	Err    string `json:"err"`
+	Op     string `json:"op"`
+	Routes Routes `json:"routes"`
+}
+
+func (r *ResponseRoutes) Error() string {
+	if r.Err == "" {
+		return "no error"
+	}
+	return fmt.Sprintf(
+		"router: %v, op: %v, error: %v",
+		r.Router,
+		r.Op,
+		r.Err,
+	)
+}
+
+func responseRoutes(w http.ResponseWriter, code int, routerName, err string, op Op, routes Routes) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(code)
+	resp := ResponseRoutes{
+		Router: routerName,
+		Err:    err,
+		Op:     string(op),
+		Routes: routes,
 	}
 	er := json.NewEncoder(w).Encode(resp)
 	if er != nil {
