@@ -34,4 +34,3 @@ func ErrHandler(w http.ResponseWriter, code int, err error) {
 		log.Tag("router", "server", "proxy").Error(er)
 	}
 }
-}
