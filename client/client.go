@@ -14,6 +14,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"sort"
 	"sync"
 	"time"
 
@@ -271,7 +272,35 @@ func (r *Router) PathExist(path string) bool {
 	return routes.Search(path)
 }
 
-func (r *Router) GetRoutes(ctx context.Context) (Routes, error) {
+func (r *Router) Paths() (paths []string) {
+	routes, err := r.getRoutes(context.TODO(), r.Router)
+	if err != nil {
+		return []string{}
+	}
+
+	paths = make([]string, 0, len(routes))
+
+	if len(routes) == 0 {
+		return
+	}
+	if len(routes) == 1 {
+		paths = append(paths, routes[0].Path)
+		return
+	}
+
+	sort.Sort(routes)
+
+	paths = append(paths, routes[0].Path)
+	for i := 1; i < len(routes); i++ {
+		if paths[i-1] == routes[i].Path {
+			continue
+		}
+		paths = append(paths, routes[i].Path)
+	}
+	return
+}
+
+func (r *Router) GetRoutes(ctx context.Context) (router.Routes, error) {
 	return r.getRoutes(ctx, r.Router)
 }
 

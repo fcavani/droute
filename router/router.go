@@ -321,6 +321,22 @@ const (
 // Routes describe a group of routes.
 type Routes []*Route
 
+func (r Routes) Len() int      { return len(r) }
+func (r Routes) Swap(i, j int) { r[i], r[j] = r[j], r[i] }
+
+func (r Routes) Less(i, j int) bool {
+	if r[i].Router == r[j].Router {
+		if r[i].Methode == r[j].Methode {
+			return r[i].Path < r[j].Path
+		} else if r[i].Methode < r[j].Methode {
+			return true
+		}
+	} else if r[i].Router < r[j].Router {
+		return true
+	}
+	return false
+}
+
 // Route define one route.
 type Route struct {
 	Methode string
