@@ -304,6 +304,10 @@ func (r *Router) GetRoutes(ctx context.Context) (router.Routes, error) {
 	return r.getRoutes(ctx, r.Router)
 }
 
+type Route struct {
+	Router string
+}
+
 func (r *Router) getRoutes(ctx context.Context, routeName string) (router.Routes, error) {
 	var body []byte
 
