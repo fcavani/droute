@@ -18,6 +18,11 @@ func UserSession(r *http.Request) sessions.Session {
 	return r.Context().Value("session").(sessions.Session)
 }
 
+func SessionLogout(r *http.Request) error {
+	fn := r.Context().Value("session_logout").(func() error)
+	return e.Forward(fn())
+}
+
 func Handler(s sessions.Sessions, c *Cookie, handler http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		uuid, err := c.UUID(r)
@@ -48,6 +53,9 @@ func Handler(s sessions.Sessions, c *Cookie, handler http.HandlerFunc) http.Hand
 			}
 		}()
 		r = r.WithContext(context.WithValue(r.Context(), "session", sess))
+		r = r.WithContext(context.WithValue(r.Context(), "session_logout", func() error {
+			return e.Forward(s.Delete(uuid))
+		}))
 		handler(w, r)
 	}
 }
