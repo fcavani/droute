@@ -221,6 +221,9 @@ func (r *Router) handlerfunc(route *router.Route, handler http.HandlerFunc) (err
 		retry.RetryIf(func(err error) bool {
 			return e.Contains(err, "connection refused")
 		}),
+		retry.Attempts(99999),
+		retry.Units(time.Millisecond),
+		retry.Delay(250),
 	)
 	if err != nil {
 		err = e.Forward(err)
