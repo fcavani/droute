@@ -18,6 +18,7 @@ import (
 	"sync"
 	"time"
 
+	retry "github.com/avast/retry-go"
 	"github.com/fcavani/droute/router"
 	"github.com/fcavani/e"
 	neturl "github.com/fcavani/net/url"
@@ -206,11 +207,26 @@ func (r *Router) handlerfunc(route *router.Route, handler http.HandlerFunc) (err
 	}
 	u := neturl.Copy(r.URL)
 	u.Path = "/en/_router/add"
-	resp, err := HTTPClient.Post(u.String(), "application/json", bytes.NewReader(buf))
+
+	var resp *http.Response
+	err = retry.Do(
+		func() error {
+			var er error
+			resp, er = HTTPClient.Post(u.String(), "application/json", bytes.NewReader(buf))
+			if er != nil {
+				return er
+			}
+			return nil
+		},
+		retry.RetryIf(func(err error) bool {
+			return e.Contains(err, "connection refused")
+		}),
+	)
 	if err != nil {
 		err = e.Forward(err)
 		return
 	}
+
 	defer resp.Body.Close()
 	switch resp.StatusCode {
 	case http.StatusCreated:

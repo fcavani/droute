@@ -112,3 +112,6 @@
 [prune]
   go-tests = true
   unused-packages = true
+[[constraint]]
+  name = "github.com/avast/retry-go"
+  version = "1.0.2"
