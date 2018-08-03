@@ -246,7 +246,11 @@ func (ur *UserRequest) Referrer() *url.URL {
 		return ur.referrer
 	}
 	var err error
-	ur.referrer, err = url.Parse(ur.r.Referer())
+	ref := ur.r.Referer()
+	if ref == "" {
+		return nil
+	}
+	ur.referrer, err = url.Parse(ref)
 	if err != nil {
 		return nil
 	}
