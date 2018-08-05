@@ -10,14 +10,6 @@
   revision = "eb2c6b5be1b66bab83016e0b05f01b8d5496ffbd"
 
 [[projects]]
-  digest = "1:b28b250b648609be14e0fa4a220b9b991ccaf7b1226781fd9d6e4dd6f4e086fd"
-  name = "github.com/avast/retry-go"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "611bd93c6d74b0575c569d7c3a13de46f65840ff"
-  version = "1.0.2"
-
-[[projects]]
   digest = "1:0f98f59e9a2f4070d66f0c9c39561f68fcd1dc837b22a852d28d0003aebd1b1e"
   name = "github.com/boltdb/bolt"
   packages = ["."]
@@ -26,15 +18,15 @@
   version = "v1.3.1"
 
 [[projects]]
-  digest = "1:4ba637038f22c9065994c0cd734118fc75e0c744f855fd3edbd3b923d1f41d44"
+  digest = "1:2209584c0f7c9b68c23374e659357ab546e1b70eec2761f03280f69a8fd23d77"
   name = "github.com/cenkalti/backoff"
   packages = ["."]
   pruneopts = "UT"
-  revision = "61153c768f31ee5f130071d08fc82b85208528de"
-  version = "v1.1.0"
+  revision = "2ea60e5f094469f9e65adb9cd103795b73ae743e"
+  version = "v2.0.0"
 
 [[projects]]
-  digest = "1:ddce1b6fa958cb002f3a5c09da9d762b4415d331f7bada1346f7843cfa66064b"
+  digest = "1:ece8cff953ed3dbbbf5d5aa41e24f61ac4c1b601004aea9d56d572af363b71e7"
   name = "github.com/coreos/etcd"
   packages = [
     "client",
@@ -44,8 +36,8 @@
     "version",
   ]
   pruneopts = "UT"
-  revision = "33245c6b5b49130ca99280408fadfab01aac0e48"
-  version = "v3.3.8"
+  revision = "fca8add78a9d926166eb739b8e4a124434025ba3"
+  version = "v3.3.9"
 
 [[projects]]
   digest = "1:0ef770954bca104ee99b3b6b7f9b240605ac03517d9f98cbc1893daa03f3c038"
@@ -110,6 +102,14 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "355dc9305085b6e8fd6c48e18eec126d833de035"
+
+[[projects]]
+  digest = "1:de7761208541b421ff86f99fdfc29d887c5303483840756f3f958cda05e7787d"
+  name = "github.com/fcavani/retry-go"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "277c01f5c79fcc4118fd1e039ff4a49f0cb630e1"
+  version = "2.0.0"
 
 [[projects]]
   branch = "master"
@@ -234,11 +234,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:e730597b38a4d56e2361e0b6236cb800e52c73cace2ff91396f4ff35792ddfa7"
+  digest = "1:5ab79470a1d0fb19b041a624415612f8236b3c06070161a910562f2b2d064355"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
   pruneopts = "UT"
-  revision = "bb74f1db0675b241733089d5a1faa5dd8b0ef57b"
+  revision = "f15292f7a699fcc1a38a80977f80a046874ba8ac"
 
 [[projects]]
   digest = "1:95741de3af260a92cc5c7f3f3061e85273f5a81b5db20d4bd68da74bd521675e"
@@ -320,12 +320,11 @@
   version = "v2.3.3"
 
 [[projects]]
-  digest = "1:03aa6e485e528acb119fb32901cf99582c380225fc7d5a02758e08b180cb56c3"
+  digest = "1:9a6cce05588eb1d696704c425d5839580e0167c08b53a7c3db57d3de6e5ab49e"
   name = "github.com/ugorji/go"
   packages = ["codec"]
   pruneopts = "UT"
-  revision = "b4c50a2b199d93b13dc15e78929cfb23bfdf21ab"
-  version = "v1.1.1"
+  revision = "bdcc60b419d136a85cdf2e7cbcac34b3f1cd6e57"
 
 [[projects]]
   branch = "master"
@@ -343,7 +342,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:02bb97b440223728adad9fdceac111414fa99c0559781d71532686837da619d0"
+  digest = "1:c35a2d130f5d6cc2836238a3c5960a70ba53ae3b11348197c685224f71fc0bf6"
   name = "golang.org/x/crypto"
   packages = [
     "cast5",
@@ -357,7 +356,7 @@
     "openpgp/s2k",
   ]
   pruneopts = "UT"
-  revision = "a49355c7e3f8fe157a85be2f77e6e269a0f89602"
+  revision = "56440b844dfe139a8ac053f4ecac0b20b79058f4"
 
 [[projects]]
   branch = "master"
@@ -369,7 +368,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:2ba1ec614ab3ff0f3da61d64c8abc610aa39112cd055370311fa37ce58a16b0f"
+  digest = "1:f0e00c33c6a4691ce8175a3af8e9568bba267e77d541a3b630b915df6bb377cd"
   name = "golang.org/x/net"
   packages = [
     "bpf",
@@ -381,15 +380,15 @@
     "ipv6",
   ]
   pruneopts = "UT"
-  revision = "d0887baf81f4598189d4e12a37c6da86f0bba4d0"
+  revision = "f4c29de78a2a91c00474a2e689954305c350adf9"
 
 [[projects]]
   branch = "master"
-  digest = "1:d773e525476aefa22ea944a5425a9bfb99819b2e67eeb9b1966454fd57522bbf"
+  digest = "1:9ec6ad2659635ba0974dd7e55bf84233523eb4e7535c9a2fddaefc4cc62a3eac"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "1b2967e3c290b7c545b3db0deeda16e9be4f98a2"
+  revision = "0ffbfd41fbef8ffcf9b62b0b0aa3a5873ed7a4fe"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -463,7 +462,6 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/avast/retry-go",
     "github.com/boltdb/bolt",
     "github.com/cenkalti/backoff",
     "github.com/coreos/etcd/client",
@@ -475,6 +473,7 @@
     "github.com/fcavani/net/dns",
     "github.com/fcavani/net/url",
     "github.com/fcavani/rand",
+    "github.com/fcavani/retry-go",
     "github.com/fcavani/slog",
     "github.com/fcavani/slog/systemd",
     "github.com/fcavani/systemd/watchdog",
