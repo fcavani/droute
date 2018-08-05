@@ -93,7 +93,7 @@ func TestClientRouter(t *testing.T) {
 		Addrs:  "https://localhost:8084",
 	}
 
-	err = clientRouter.Start()
+	err = clientRouter.Start(context.Background())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -145,7 +145,7 @@ func TestHTTPClient(t *testing.T) {
 const addrs = "https://localhost:8082/"
 
 func TestGET(t *testing.T) {
-	err := clientRouter.GET("/", func(rw http.ResponseWriter, req *http.Request) {
+	err := clientRouter.GET(context.Background(), "/", func(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusOK)
 		fmt.Fprintf(rw, "%v", "teste")
 	})
@@ -170,7 +170,7 @@ func TestGET(t *testing.T) {
 }
 
 func TestGET2(t *testing.T) {
-	err := clientRouter.GET("/", func(rw http.ResponseWriter, req *http.Request) {
+	err := clientRouter.GET(context.Background(), "/", func(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusOK)
 		fmt.Fprintf(rw, "%v", "another test")
 	})
@@ -180,14 +180,14 @@ func TestGET2(t *testing.T) {
 }
 
 func TestGET3(t *testing.T) {
-	err := clientRouter.GET("/:data/:entry", func(rw http.ResponseWriter, req *http.Request) {
+	err := clientRouter.GET(context.Background(), "/x/:data/:entry", func(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusOK)
 		fmt.Fprintf(rw, "%v", "teste")
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	resp, err := httpClient.Get(addrs)
+	resp, err := httpClient.Get(addrs + "x/a/b/")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -205,7 +205,7 @@ func TestGET3(t *testing.T) {
 }
 
 func TestDELETE(t *testing.T) {
-	err := clientRouter.DELETE("/*filename", func(rw http.ResponseWriter, req *http.Request) {
+	err := clientRouter.DELETE(context.Background(), "/*filename", func(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusOK)
 		file := httprouter.Parameters(req).ByName("filename")
 		fmt.Fprintf(rw, "file deleted %v", file)
@@ -235,7 +235,7 @@ func TestDELETE(t *testing.T) {
 }
 
 func TestHEAD(t *testing.T) {
-	err := clientRouter.HEAD("/file.txt", func(rw http.ResponseWriter, req *http.Request) {
+	err := clientRouter.HEAD(context.Background(), "/file.txt", func(rw http.ResponseWriter, req *http.Request) {
 		expire := 600 * time.Second
 		maxAge := strconv.FormatFloat(expire.Seconds(), 'f', 0, 64)
 		rw.Header().Add("Content-Length", "69")
@@ -269,7 +269,7 @@ func TestHEAD(t *testing.T) {
 }
 
 func TestOPTIONS(t *testing.T) {
-	err := clientRouter.OPTIONS("/catoto.dat", func(rw http.ResponseWriter, req *http.Request) {
+	err := clientRouter.OPTIONS(context.Background(), "/catoto.dat", func(rw http.ResponseWriter, req *http.Request) {
 		expire := 600 * time.Second
 		maxAge := strconv.FormatFloat(expire.Seconds(), 'f', 0, 64)
 		rw.Header().Add("Content-Length", "0")
@@ -307,7 +307,7 @@ func TestOPTIONS(t *testing.T) {
 }
 
 func TestPATCH(t *testing.T) {
-	err := clientRouter.PATCH("/user.json", func(rw http.ResponseWriter, req *http.Request) {
+	err := clientRouter.PATCH(context.Background(), "/user.json", func(rw http.ResponseWriter, req *http.Request) {
 		var user struct{ Name string }
 		er := json.NewDecoder(req.Body).Decode(&user)
 		if er != nil {
@@ -358,7 +358,7 @@ func TestPATCH(t *testing.T) {
 }
 
 func TestPOST(t *testing.T) {
-	err := clientRouter.POST("/form", func(rw http.ResponseWriter, req *http.Request) {
+	err := clientRouter.POST(context.Background(), "/form", func(rw http.ResponseWriter, req *http.Request) {
 		er := req.ParseForm()
 		if er != nil {
 			t.Log(er)
@@ -393,7 +393,7 @@ func TestPOST(t *testing.T) {
 }
 
 func TestPUT(t *testing.T) {
-	err := clientRouter.PUT("/*filename", func(rw http.ResponseWriter, req *http.Request) {
+	err := clientRouter.PUT(context.Background(), "/*filename", func(rw http.ResponseWriter, req *http.Request) {
 		if req.Header.Get("Content-Type") != "text/html" {
 			t.Log("invalid Content-Type")
 			rw.WriteHeader(http.StatusInternalServerError)
@@ -457,7 +457,7 @@ func Test422(t *testing.T) {
 		URL:    u,
 		Addrs:  "https://localhost:8088",
 	}
-	err = cr.Start()
+	err = cr.Start(context.Background())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -477,7 +477,7 @@ func Test422(t *testing.T) {
 	}
 	defer client.Stop()
 
-	err = cr.GET("/", func(rw http.ResponseWriter, req *http.Request) {
+	err = cr.GET(context.Background(), "/", func(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusOK)
 		fmt.Fprintf(rw, "%v", "teste")
 	})
@@ -536,7 +536,7 @@ func Test500(t *testing.T) {
 		URL:    u,
 		Addrs:  "https://localhost:8008",
 	}
-	err = cr.Start()
+	err = cr.Start(context.Background())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -556,7 +556,7 @@ func Test500(t *testing.T) {
 	}
 	defer client.Stop()
 
-	err = cr.GET("/", func(rw http.ResponseWriter, req *http.Request) {
+	err = cr.GET(context.Background(), "/", func(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusOK)
 		fmt.Fprintf(rw, "%v", "teste")
 	})
@@ -607,7 +607,7 @@ func TestXXX(t *testing.T) {
 		URL:    u,
 		Addrs:  "https://localhost:8008",
 	}
-	err = cr.Start()
+	err = cr.Start(context.Background())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -627,7 +627,7 @@ func TestXXX(t *testing.T) {
 	}
 	defer client.Stop()
 
-	err = cr.GET("/", func(rw http.ResponseWriter, req *http.Request) {
+	err = cr.GET(context.Background(), "/", func(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusOK)
 		fmt.Fprintf(rw, "%v", "teste")
 	})

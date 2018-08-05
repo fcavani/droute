@@ -18,10 +18,10 @@ import (
 	"sync"
 	"time"
 
-	retry "github.com/avast/retry-go"
 	"github.com/fcavani/droute/router"
 	"github.com/fcavani/e"
 	neturl "github.com/fcavani/net/url"
+	retry "github.com/fcavani/retry-go"
 	log "github.com/fcavani/slog"
 	"gopkg.in/fcavani/httprouter.v2"
 )
@@ -98,7 +98,7 @@ func ConfigHTTPClient(certificate, privateKey, ca string, insecure bool) error {
 
 // Start initialize the router. Setup the server that will receive the income
 // requests and send it to the right route.
-func (r *Router) Start() error {
+func (r *Router) Start(ctx context.Context) error {
 	r.once.Do(func() {
 		r.router = httprouter.New()
 		// TODO: Tirar isso daqui. Automatizar...
@@ -114,7 +114,7 @@ func (r *Router) Start() error {
 				case <-time.After(time.Minute):
 					r.lck.Lock()
 					for route, handler := range r.routes {
-						err := r.handlerfunc(route, handler)
+						err := r.handlerfunc(ctx, route, handler)
 						if err == nil {
 							log.Errorf("Route re add to proxy: %v %v %v", route.Router, route.Methode, route.Path)
 						}
@@ -133,45 +133,45 @@ func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 }
 
 // DELETE route with http method DELETE.
-func (r *Router) DELETE(path string, handle http.HandlerFunc) error {
-	return r.HandlerFunc("DELETE", path, handle)
+func (r *Router) DELETE(ctx context.Context, path string, handle http.HandlerFunc) error {
+	return r.HandlerFunc(ctx, "DELETE", path, handle)
 }
 
 // GET route with http method GET.
-func (r *Router) GET(path string, handle http.HandlerFunc) error {
-	return r.HandlerFunc("GET", path, handle)
+func (r *Router) GET(ctx context.Context, path string, handle http.HandlerFunc) error {
+	return r.HandlerFunc(ctx, "GET", path, handle)
 }
 
 // HEAD route with http method HEAD.
-func (r *Router) HEAD(path string, handle http.HandlerFunc) error {
-	return r.HandlerFunc("HEAD", path, handle)
+func (r *Router) HEAD(ctx context.Context, path string, handle http.HandlerFunc) error {
+	return r.HandlerFunc(ctx, "HEAD", path, handle)
 }
 
 // OPTIONS route with http method OPTIONS.
-func (r *Router) OPTIONS(path string, handle http.HandlerFunc) error {
-	return r.HandlerFunc("OPTIONS", path, handle)
+func (r *Router) OPTIONS(ctx context.Context, path string, handle http.HandlerFunc) error {
+	return r.HandlerFunc(ctx, "OPTIONS", path, handle)
 }
 
 // PATCH route with http method PATCH.
-func (r *Router) PATCH(path string, handle http.HandlerFunc) error {
-	return r.HandlerFunc("PATCH", path, handle)
+func (r *Router) PATCH(ctx context.Context, path string, handle http.HandlerFunc) error {
+	return r.HandlerFunc(ctx, "PATCH", path, handle)
 }
 
 // POST route with http method POST.
-func (r *Router) POST(path string, handle http.HandlerFunc) error {
-	return r.HandlerFunc("POST", path, handle)
+func (r *Router) POST(ctx context.Context, path string, handle http.HandlerFunc) error {
+	return r.HandlerFunc(ctx, "POST", path, handle)
 }
 
 // PUT route with http method PUT.
-func (r *Router) PUT(path string, handle http.HandlerFunc) error {
-	return r.HandlerFunc("PUT", path, handle)
+func (r *Router) PUT(ctx context.Context, path string, handle http.HandlerFunc) error {
+	return r.HandlerFunc(ctx, "PUT", path, handle)
 }
 
 // BodyLimitSize is the max request body size.
 var BodyLimitSize int64 = 1048576
 
 // HandlerFunc is a generic method to add a route into the router.
-func (r *Router) HandlerFunc(method, path string, handler http.HandlerFunc) error {
+func (r *Router) HandlerFunc(ctx context.Context, method, path string, handler http.HandlerFunc) error {
 	r.lck.Lock()
 	defer r.lck.Unlock()
 
@@ -182,7 +182,7 @@ func (r *Router) HandlerFunc(method, path string, handler http.HandlerFunc) erro
 		RedirTo: r.Addrs,
 	}
 
-	err := r.handlerfunc(route, handler)
+	err := r.handlerfunc(ctx, route, handler)
 	if err != nil {
 		return err
 	}
@@ -192,7 +192,7 @@ func (r *Router) HandlerFunc(method, path string, handler http.HandlerFunc) erro
 	return nil
 }
 
-func (r *Router) handlerfunc(route *router.Route, handler http.HandlerFunc) (err error) {
+func (r *Router) handlerfunc(ctx context.Context, route *router.Route, handler http.HandlerFunc) (err error) {
 	var body []byte
 
 	defer func() {
@@ -200,6 +200,7 @@ func (r *Router) handlerfunc(route *router.Route, handler http.HandlerFunc) (err
 			log.Errorf("Can't add handler (%v, %v, %v) error: %v", route.Router, route.Methode, route.Path, err)
 		}
 	}()
+
 	buf, err := json.Marshal(route)
 	if err != nil {
 		err = e.Forward(err)
@@ -210,7 +211,7 @@ func (r *Router) handlerfunc(route *router.Route, handler http.HandlerFunc) (err
 
 	var resp *http.Response
 	err = retry.Do(
-		func() error {
+		func(_ context.Context) error {
 			var er error
 			resp, er = HTTPClient.Post(u.String(), "application/json", bytes.NewReader(buf))
 			if er != nil {
@@ -224,6 +225,7 @@ func (r *Router) handlerfunc(route *router.Route, handler http.HandlerFunc) (err
 		retry.Attempts(99999),
 		retry.Units(time.Millisecond),
 		retry.Delay(250),
+		retry.Context(ctx),
 	)
 	if err != nil {
 		err = e.Forward(err)
