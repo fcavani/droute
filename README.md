@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/fcavani/droute.svg?branch=master)](https://travis-ci.org/fcavani/droute) [![GoDoc](https://godoc.org/github.com/fcavani/droute?status.svg)](https://godoc.org/github.com/fcavani/droute)
 [![Go Report Card](https://goreportcard.com/badge/github.com/fcavani/droute)](https://goreportcard.com/report/github.com/fcavani/droute)
 
-Droute is a proxy server and a http router for microservices. The proxy part
+Droute is a proxy server and a http router. The proxy part
 receive the requests and redirect it based on the domain and path of the
 request. The client part, where is the logic, register itself with the proxy
 sending to it the domain, path and host. Is supported multiple hosts for the same
@@ -21,13 +21,13 @@ go get github.com/fcavani/droute
 
 And change the folder to the droute folder.
 
-## Govendor
+## Dep
 
 Start sync yours vendor folder.
 
 ```
-go get github.com/kardianos/govendor
-govendor sync
+go get -u github.com/golang/dep/cmd/dep
+dep ensure
 ```
 
 ## Server
