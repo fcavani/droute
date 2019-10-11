@@ -54,29 +54,35 @@ func NewFBCrawler(server, port string, refresh time.Duration, cache string, AS .
 }
 
 func (fbc *FBCrawler) init() error {
+	var err error
+	var f *os.File
+	cache := make(map[string]*Object)
+
+	f, err = os.Open(fbc.Cache)
+	if err != nil {
+		goto retrive
+	}
+	defer f.Close()
+	err = json.NewDecoder(f).Decode(&cache)
+	if err != nil {
+		goto retrive
+	}
+	fbc.objs = cache
+	goto start
+retrive:
 	// Buscar po uma nova
-	err := fbc.retrieve()
+	err = fbc.retrieve()
 	if err != nil {
 		log.Tag("fbcrawler").Println("Erro retriving the whois data:", e.Forward(err))
-		// Usar uma em cache
-		f, er := os.Open(fbc.Cache)
-		if er != nil {
-			goto start
-		}
-		defer f.Close()
-		dec := json.NewDecoder(f)
-		cache := make(map[string]*Object)
-		er = dec.Decode(&cache)
-		if er != nil {
-			return e.Forward(er)
-		}
-		fbc.objs = cache
 	}
+	goto start
 start:
 	go func() {
 		for {
 			time.Sleep(fbc.Refresh)
-			fbc.retrieve()
+			// TODO: QUEM ATUALIZA?????
+			// fbc.retrieve()
+
 		}
 	}()
 	return nil
