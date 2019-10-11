@@ -17,7 +17,7 @@ it.
 
 ## Install
 
-Execute the above command:
+Execute the bellow command:
 
 ```
 go get github.com/fcavani/droute
