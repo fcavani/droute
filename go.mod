@@ -10,7 +10,9 @@ require (
 	github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/fcavani/e v0.0.0-20190108093449-7f1a2baab4bc
+	github.com/fcavani/net v0.0.0-20190115200426-b1713d8a4c6e
 	github.com/fcavani/slog v0.0.0-20190108095738-6f68afade91c
+	github.com/fcavani/text v0.0.0-20190114102719-023e76809b57
 	github.com/fcavani/types v0.0.0-20190108093745-880c6f4a8b38
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/gogo/protobuf v1.2.0 // indirect
@@ -38,3 +40,5 @@ require (
 	google.golang.org/grpc v1.17.0 // indirect
 	gopkg.in/vmihailenco/msgpack.v2 v2.9.1
 )
+
+go 1.13
